@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Transfer</title>
+
+    <link rel="stylesheet" href="../css/production.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="history-box">
+
+        <h2>Transfer Entry</h2>
+
+        <label>Transfer Date</label><br>
+        <input type="date" id="transferDate">
+
+        <br><br>
+
+        <label>Branch</label><br>
+        <select id="branch">
+            <option value="">Select Branch</option>
+        </select>
+
+        <br><br>
+
+        <table id="transferTable" class="production-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Item</th>
+                    <th>Quantity</th>
+                    <th>Unit</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="transferRows">
+            </tbody>
+        </table>
+
+        <br>
+        <button type="button" id="addRowBtn">➕ Add Row</button>
+        <button type="button" id="saveBtn">Save Transfer</button>
+
+    </div>
+
+</div>
+
+<script src="../js/transfer.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chef Bisu Dashboard</title>
+
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+
+<body>
+
+<div class="sidebar">
+
+    <h2>Chef Bisu </h2>
+
+    <ul class="menu">
+
+    <li>
+        <a href="dashboard.html">🏠 Dashboard</a>
+    </li>
+
+    <li>
+        <a href="production.html">🏭 Production</a>
+    </li>
+
+    <li>
+        <a href="production-history.html">📋 Production History</a>
+    </li>
+
+    <li>
+        <a href="transfer.html">🚚 Transfer</a>
+    </li>
+    <li>
+    <a href="transfer-history.html">📋 Transfer History</a>
+</li>
+
+    <li>
+        <a href="stock.html">📦 Stock</a>
+    </li>
+
+    <li>
+        <a href="reports.html">📊 Reports</a>
+    </li>
+
+    <li>
+        <a href="users.html">👥 Users</a>
+    </li>
+
+    <li>
+        <a href="settings.html">⚙️ Settings</a>
+    </li>
+
+</ul>
+
+</div>
+
+<div class="main">
+
+    <div class="header">
+
+        <h1>Dashboard</h1>
+        
+        <div class="profile">
+
+            <span>👤 Admin</span>
+
+            <button>Logout</button>
+
+        </div>
+
+    </div>
+
+<div class="action-bar">
+
+    <button id="newMonthBtn">➕ Create New Month</button>
+
+    <button id="lockMonthBtn">🔒 Month Lock</button>
+
+    <button id="historyBtn">📂 Month History</button>
+
+    <button id="exportBtn">📤 Export Excel</button>
+
+    <button id="printBtn">🖨️ Print</button>
+
+</div>
+
+  <div class="filter-bar">
+
+    <input type="date" id="fromDate">
+
+    <input type="date" id="toDate">
+
+    <input type="text" placeholder="Search Item">
+
+    <select>
+        <option>All</option>
+        <option>Production</option>
+        <option>Transfer</option>
+        <option>Stock</option>
+        <option>Reports</option>
+    </select>
+
+    <button>Search</button>
+
+</div>
+<div class="cards">
+<div class="card">
+    <h3>Item Master</h3>
+
+    <input
+        type="text"
+        id="itemName"
+        placeholder="Enter Item Name">
+
+    <br><br>
+
+    <button id="saveItemBtn">
+        Add Item
+    </button>
+    <table id="itemListTable" border="1" cellpadding="6" style="width:100%; text-align:left;">
+        <thead>
+            <tr>
+                <th>Item Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="itemListBody">
+        </tbody>
+    </table>
+</div>
+<div class="card">
+    <h3>Branch Master</h3>
+
+    <input
+        type="text"
+        id="branchName"
+        placeholder="Enter Branch Name">
+
+    <br><br>
+
+    <button id="saveBranchBtn">
+        Add Branch
+    </button>
+
+    <br><br>
+
+    <table id="branchListTable" border="1" cellpadding="6" style="width:100%; text-align:left;">
+        <thead>
+            <tr>
+                <th>Branch Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody id="branchListBody">
+        </tbody>
+    </table>
+</div>
+    <div class="card">
+        <h2>120</h2>
+        <p>Total Stock</p>
+    </div>
+
+    <div class="card">
+        <h2 id="productionCount">0</h2>
+        <p>TotalProduction</p>
+    </div>
+    <div class="card">
+        <h2 id="todayproduction">0</h2>
+        <p>Today's production</p>
+    </div>
+    <div class="card">
+        <h2>18</h2>
+        <p>Transfer</p>
+    </div>
+
+    <div class="card">
+        <h2>12</h2>
+        <p>Reports</p>
+    </div>
+ </div>
+ <div class="card" style="grid-column:1/-1;height:350px;">
+    <h3>Production Trend</h3>
+
+    <canvas id="productionChart"></canvas>
+
+</div> 
+<footer class="footer">
+
+    <div class="footer-left">
+        ERP V2 © 2026
+    </div>
+
+    <div class="footer-center">
+        Store & Production Management System
+    </div>
+
+    <div class="footer-right">
+        Version 2.0
+    </div>
+
+</footer>
+<script src="../js/dashboard.js"></script>
+<script src="../vendor/chart.min.js"></script>
+<script src="../js/dashboard-chart.js"></script>
+</body>
+
+</html>

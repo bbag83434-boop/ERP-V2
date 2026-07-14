@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store Management</title>
+
+    <link rel="stylesheet" href="../css/store-dashboard.css">
+</head>
+
+<body>
+
+<div class="store-container">
+
+    <div class="page-header">
+
+        <div>
+            <h1>Store Management</h1>
+            <p>Purchase • Stock • Supplier • Reports</p>
+        </div>
+
+        <div>
+            <button id="newPurchaseBtn">
+                + New Purchase
+            </button>
+        </div>
+
+    </div>
+
+
+    <div class="summary-grid">
+
+        <div class="summary-card">
+            <h3>Total Stock Value</h3>
+            <h2 id="stockValue">₹0.00</h2>
+        </div>
+
+        <div class="summary-card">
+            <h3>Today's Purchase</h3>
+            <h2 id="todayPurchase">₹0.00</h2>
+        </div>
+
+        <div class="summary-card">
+            <h3>Monthly Purchase</h3>
+            <h2 id="monthPurchase">₹0.00</h2>
+        </div>
+
+        <div class="summary-card">
+            <h3>Pending Payment</h3>
+            <h2 id="pendingPayment">₹0.00</h2>
+        </div>
+
+        <div class="summary-card">
+            <h3>GST Amount</h3>
+            <h2 id="gstAmount">₹0.00</h2>
+        </div>
+
+        <div class="summary-card">
+            <h3>Low Stock Items</h3>
+            <h2 id="lowStock">0</h2>
+        </div>
+
+    </div>
+
+
+    <div class="menu-grid">
+
+        <button>Purchase Entry</button>
+
+        <button>Purchase History</button>
+
+        <button>Stock Ledger</button>
+
+        <button>Opening Stock</button>
+
+        <button>Closing Stock</button>
+
+        <button>Supplier Master</button>
+
+        <button>Supplier Ledger</button>
+
+        <button>Damage Stock</button>
+
+        <button>Transfer Stock</button>
+
+        <button>Reports</button>
+
+        <button>Export Excel</button>
+
+        <button>Print PDF</button>
+
+    </div>
+
+</div>
+
+<script src="../js/store-dashboard.js"></script>
+
+</body>
+
+</html>

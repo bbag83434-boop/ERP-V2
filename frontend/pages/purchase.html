@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Purchase Entry</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+</head>
+
+<body class="bg-light">
+
+    <div class="container py-4">
+
+        <h2 class="mb-4 fw-bold">
+            Purchase Entry
+        </h2>
+        <div class="card shadow-sm mb-4">
+
+    <div class="card-header bg-primary text-white fw-bold">
+        Purchase Information
+    </div>
+
+    <div class="card-body">
+
+        <div class="row g-3">
+
+            <div class="col-md-3">
+
+                <label class="form-label">
+                    Purchase No
+                </label>
+
+                <input
+                    type="text"
+                    class="form-control"
+                    id="purchase_no"
+                    readonly>
+
+            </div>
+
+            <div class="col-md-3">
+
+                <label class="form-label">
+                    Purchase Date
+                </label>
+
+                <input
+                    type="date"
+                    class="form-control"
+                    id="purchase_date">
+
+            </div>
+
+            <div class="col-md-6">
+
+                <label class="form-label">
+                    Supplier
+                </label>
+
+                <select
+                    class="form-select"
+                    id="supplier">
+
+                    <option value="">
+                        Select Supplier
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label class="form-label">
+                    Branch
+                </label>
+
+                <select
+                    class="form-select"
+                    id="branch">
+
+                    <option value="">
+                        Select Branch
+                    </option>
+
+                </select>
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label class="form-label">
+                    Invoice No
+                </label>
+
+                <input
+                    type="text"
+                    class="form-control"
+                    id="invoice_no">
+
+            </div>
+
+            <div class="col-md-4">
+
+                <label class="form-label">
+                    Invoice Date
+                </label>
+
+                <input
+                    type="date"
+                    class="form-control"
+                    id="invoice_date">
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="card shadow-sm mb-4">
+
+    <div class="card-header bg-success text-white fw-bold">
+        Purchase Items
+    </div>
+
+    <div class="card-body">
+
+        <div class="table-responsive">
+
+            <table class="table table-bordered table-hover align-middle text-center">
+
+                <thead class="table-light">
+
+                    <tr>
+
+                        <th width="30%">Item</th>
+
+                        <th width="10%">Qty</th>
+
+                        <th width="10%">Unit</th>
+
+                        <th width="15%">Rate</th>
+
+                        <th width="10%">GST %</th>
+
+                        <th width="15%">Amount</th>
+
+                        <th width="10%">Action</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="purchase_items">
+
+                    <tr>
+
+                        <td>
+
+                            <select class="form-select item">
+
+                                <option>Select Item</option>
+
+                            </select>
+
+                        </td>
+
+                        <td>
+
+                            <input
+                                type="number"
+                                class="form-control text-end"
+                                value="0">
+
+                        </td>
+
+                        <td>
+
+                            <input
+                                type="text"
+                                class="form-control"
+                                readonly>
+
+                        </td>
+
+                        <td>
+
+                            <input
+                                type="number"
+                                class="form-control text-end"
+                                value="0">
+
+                        </td>
+
+                        <td>
+
+                            <input
+                                type="number"
+                                class="form-control text-end"
+                                value="0">
+
+                        </td>
+
+                        <td>
+
+                            <input
+                                type="text"
+                                class="form-control text-end"
+                                value="0.00"
+                                readonly>
+
+                        </td>
+
+                        <td>
+
+                            <button
+                                class="btn btn-danger">
+
+                                <i class="bi bi-trash"></i>
+
+                            </button>
+
+                        </td>
+
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        <button
+            id="addRowBtn"
+            type="button"
+            class="btn btn-primary mt-3">
+
+            <i class="bi bi-plus-circle"></i>
+
+            Add Row
+
+        </button>
+
+    </div>
+
+</div>
+<div class="card shadow-sm mb-4">
+
+    <div class="card-header bg-warning fw-bold">
+        Purchase Summary
+    </div>
+
+    <div class="card-body">
+
+        <div class="row justify-content-end">
+
+            <div class="col-md-4">
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        Sub Total
+                    </label>
+
+                    <input
+                        type="text"
+                        id="sub_total"
+                        class="form-control text-end"
+                        value="0.00"
+                        readonly>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        GST Total
+                    </label>
+
+                    <input
+                        type="text"
+                        id="gst_total"
+                        class="form-control text-end"
+                        value="0.00"
+                        readonly>
+
+                </div>
+
+                <div>
+
+                    <label class="form-label fw-bold">
+                        Grand Total
+                    </label>
+
+                    <input
+                        type="text"
+                        id="grand_total"
+                        class="form-control text-end fw-bold"
+                        value="0.00"
+                        readonly>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="d-flex justify-content-end gap-2 mb-5">
+
+    <button
+        type="button"
+        class="btn btn-secondary">
+
+        Reset
+
+    </button>
+
+    <button
+        type="button"
+        class="btn btn-success"
+        onclick="savePurchase()">
+        <! class="bi bi-save"></i>
+       save purchase
+       
+
+    </button>
+
+</div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script src="../js/purchase.js"></script>
+</body>
+
+</html>

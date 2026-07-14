@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock</title>
+
+    <link rel="stylesheet" href="../css/production.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>Stock Sheet</h1>
+    </div>
+
+<div class="history-box">
+
+    <h2>Monthly Stock</h2>
+
+    <label>Select Month</label><br>
+    <input type="month" id="stockMonth">
+    <button id="loadStockBtn">Show Stock</button>
+
+    <br><br>
+
+    <table class="production-table">
+
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Opening</th>
+                <th>In (Production)</th>
+                <th>Out (Transfer)</th>
+                <th>Closing</th>
+            </tr>
+        </thead>
+
+        <tbody id="stockTableBody">
+        </tbody>
+
+    </table>
+
+</div>
+
+</div>
+
+<script src="../js/stock.js"></script>
+
+</body>
+</html>

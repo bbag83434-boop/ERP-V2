@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Production History</title>
+
+    <link rel="stylesheet" href="../css/production.css">
+</head>
+
+<body>
+
+
+
+<div class="main">
+
+    <div class="header">
+
+        <h1>Production History</h1>
+
+        <div class="profile">
+            <span>👤 Admin</span>
+            <button>Logout</button>
+        </div>
+
+    </div>
+
+    <div class="history-box">
+
+        <div class="history-top">
+
+            <div>
+
+                <h2>Production History</h2>
+
+                <div class="record-card">
+                    📦 Total Records :
+                    <span id="totalRecords">0</span>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="search-card">
+
+            <input type="date" id="searchDate">
+
+            <input
+                type="text"
+                id="searchItem"
+                placeholder="Search Item Name">
+
+            <button onclick="searchByDate()">
+                Search
+            </button>
+
+            <button onclick="loadHistory()">
+                Show All
+            </button>
+
+        </div>
+
+        <table class="production-table">
+
+            <thead>
+
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Item</th>
+                    <th>Qty</th>
+                    <th>Unit</th>
+                    <th>Action</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="historyTableBody">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+<script src="../js/production-history.js"></script>
+
+</body>
+</html>

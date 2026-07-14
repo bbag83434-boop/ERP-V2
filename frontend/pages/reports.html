@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports</title>
+
+    <link rel="stylesheet" href="../css/production.css">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+        <h1>Reports</h1>
+    </div>
+
+<div class="history-box">
+
+    <h2>Production Report</h2>
+
+    <label>From</label>
+    <input type="date" id="prodFrom">
+
+    <label>To</label>
+    <input type="date" id="prodTo">
+
+    <button id="prodReportBtn">Show Production Report</button>
+
+    <br><br>
+
+    <table class="production-table">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Total Quantity</th>
+                <th>Unit</th>
+            </tr>
+        </thead>
+        <tbody id="prodReportBody">
+        </tbody>
+    </table>
+
+</div>
+
+<br>
+
+<div class="history-box">
+
+    <h2>Transfer Report</h2>
+
+    <label>From</label>
+    <input type="date" id="transFrom">
+
+    <label>To</label>
+    <input type="date" id="transTo">
+
+    <label>Branch</label>
+    <select id="transBranch">
+        <option value="All">All Branches</option>
+    </select>
+
+    <button id="transReportBtn">Show Transfer Report</button>
+
+    <br><br>
+
+    <table class="production-table">
+        <thead>
+            <tr>
+                <th>Branch</th>
+                <th>Item</th>
+                <th>Total Quantity</th>
+                <th>Unit</th>
+            </tr>
+        </thead>
+        <tbody id="transReportBody">
+        </tbody>
+    </table>
+
+</div>
+
+</div>
+
+<script src="../js/reports.js"></script>
+
+</body>
+</html>

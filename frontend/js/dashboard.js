@@ -251,18 +251,3 @@ async function deleteUser(id) {
 }
 
 loadUserList();
-// Login check
-const user = JSON.parse(localStorage.getItem("loggedInUser"));
-
-if (!user) {
-    window.location.href = "login.html";
-}
-
-// Logout
-document.getElementById("logoutBtn").addEventListener("click", () => {
-
-    localStorage.removeItem("loggedInUser");
-
-    window.location.href = "login.html";
-
-});

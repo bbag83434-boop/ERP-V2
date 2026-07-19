@@ -1,3 +1,8 @@
+const loggedInUser = JSON.parse(localStorage.getItem("loggedInUser"));
+
+if (!loggedInUser) {
+    window.location.href = "login.html";
+}
 async function loadHistory() {
 
     const response = await fetch("http://localhost:3000/api/production/all");
@@ -28,13 +33,13 @@ const filteredData = data.filter(row =>
     <td>${row.unit}</td>
 
     <td>
-        <button onclick="deleteProduction(${row.id})">
-            Delete
-        </button>
-        <button onclick="editProduction(${row.id})">
-    Edit
-</button>
-    </td>
+${row.request_status === "Approved"
+? `<button onclick="editProduction(${row.id})">Edit</button>`
+: row.request_status === "Pending"
+? `<button disabled>Pending</button>`
+: `<button onclick="requestEdit(${row.id})">Request Edit</button>`
+}
+</td>
 
 </tr>
 `;
@@ -44,6 +49,27 @@ const filteredData = data.filter(row =>
 }
 
 loadHistory();
+async function requestEdit(id) {
+
+    const response = await fetch(
+        "http://localhost:3000/api/production/request-edit",
+        {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                production_id: id,
+                requested_by: loggedInUser.username
+            })
+        }
+    );
+
+    const result = await response.json();
+
+    alert(result.message);
+
+}
 async function deleteProduction(id) {
 
     const ok = confirm("Are you sure?");
@@ -136,10 +162,17 @@ async function searchByDate() {
             <td>${row.item}</td>
             <td>${row.qty}</td>
             <td>${row.unit}</td>
-            <td>
-                <button onclick="deleteProduction(${row.id})">Delete</button>
-                <button onclick="editProduction(${row.id})">Edit</button>
-            </td>
+           <td>
+${loggedInUser.role.toLowerCase() === "admin"
+? `
+<button onclick="editProduction(${row.id})">Edit</button>
+<button onclick="deleteProduction(${row.id})">Delete</button>
+`
+: `
+<button onclick="requestEdit(${row.id})">Request Edit</button>
+`
+}
+</td>
         </tr>
         `;
 

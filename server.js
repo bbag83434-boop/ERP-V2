@@ -20,15 +20,16 @@ app.use(
         path.join(__dirname, "frontend")
     )
 );
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "frontend", "pages", "login.html"));
+});
 app.use("/",authRoutes);
 app.use("/api/production", productionRoutes);
 app.use("/api/transfer", transferRoutes);
 app.use("/api/supplier", supplierRoutes);
 app.use("/api/purchase", purchaseRoutes);
 app.use("/api/store-items", storeItemRoutes);
-app.get("/",(req,res)=>{
-    res.send("ERP API is running");
-})
+
 app.listen(port,()=>{
     console.log("server is running...");
 });

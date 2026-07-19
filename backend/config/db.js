@@ -270,5 +270,20 @@ db.run(`
 INSERT OR IGNORE INTO users (username, password, role)
 VALUES ('admin', '1234', 'Admin')
 `);
+db.run(`
+CREATE TABLE IF NOT EXISTS edit_requests (
+
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    production_id INTEGER NOT NULL,
+
+    requested_by TEXT NOT NULL,
+
+    status TEXT DEFAULT 'Pending',
+
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+
+)
+`);
 });
 module.exports = db;

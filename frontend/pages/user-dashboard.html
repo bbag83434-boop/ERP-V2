@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chef Bisu - User Dashboard</title>
+
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+
+<body>
+
+<div class="main" style="margin: 0 auto; max-width: 700px;">
+
+    <div class="header">
+        <h1>Welcome</h1>
+        <div class="profile">
+            <span id="userNameDisplay">👤 User</span>
+            <button id="logoutBtn">Logout</button>
+        </div>
+    </div>
+
+    <div class="cards" style="grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 30px;">
+
+        <div class="card" style="text-align: center;">
+            <a href="production.html" style="text-decoration:none; color:inherit;">
+                🏭 <br> Production Entry
+            </a>
+        </div>
+
+        <div class="card" style="text-align: center;">
+            <a href="production-history.html" style="text-decoration:none; color:inherit;">
+                📋 <br> Production History
+            </a>
+        </div>
+
+        <div class="card" style="text-align: center;">
+            <a href="transfer.html" style="text-decoration:none; color:inherit;">
+                🚚 <br> Transfer Entry
+            </a>
+        </div>
+
+        <div class="card" style="text-align: center;">
+            <a href="transfer-history.html" style="text-decoration:none; color:inherit;">
+                📋 <br> Transfer History
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+<script src="../js/user-dashboard.js"></script>
+
+</body>
+</html>

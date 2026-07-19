@@ -20,12 +20,16 @@ form.addEventListener("submit", async function (e) {
 
         if (result.success) {
 
-            localStorage.setItem("loggedInUser", JSON.stringify(result.user));
+    localStorage.setItem("loggedInUser", JSON.stringify(result.user));
+console.log(result.user);
+console.log(result.user.role);
+    if (result.user.role === "admin") {
+        window.location.href = "/pages/dashboard.html";
+    } else {
+        window.location.href = "/pages/user-dashboard.html";
+    }
 
-            window.location.href = "dashboard.html";
-
-        } else {
-
+} else {
             alert(result.message);
 
         }

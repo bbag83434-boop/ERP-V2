@@ -56,8 +56,17 @@ console.log(req.body);
 router.get("/all", (req, res) => {
 
     db.all(
-        `SELECT * FROM production
-         ORDER BY id DESC`,
+        `SELECT
+    p.*,
+    (
+        SELECT status
+        FROM edit_requests er
+        WHERE er.production_id = p.id
+        ORDER BY er.id DESC
+        LIMIT 1
+    ) AS request_status
+FROM production p
+ORDER BY p.id DESC`,
         [],
         (err, rows) => {
 
@@ -395,7 +404,130 @@ router.get("/chart", (req, res) => {
             res.json(rows);
         }
     );
+    });
+router.get("/users", (req, res) => {
+
+    db.all(
+        "SELECT id, username, role FROM users ORDER BY username ASC",
+        [],
+        (err, rows) => {
+            if (err) return res.status(500).json(err);
+            res.json(rows);
+        }
+    );
 
 });
 
+router.post("/users", (req, res) => {
+
+    const { username, password, role } = req.body;
+
+    if (!username || !password || !role) {
+        return res.status(400).json({ message: "সব তথ্য দিন" });
+    }
+
+    db.run(
+        "INSERT INTO users (username, password, role) VALUES (?, ?, ?)",
+        [username, password, role],
+        function (err) {
+            if (err) return res.status(500).json({ message: "এই Username আগে থেকে আছে" });
+            res.json({ message: "User Created Successfully" });
+        }
+    );
+
+});
+
+router.delete("/users/:id", (req, res) => {
+
+    const id = req.params.id;
+
+    db.run(
+        "DELETE FROM users WHERE id = ?",
+        [id],
+        function (err) {
+            if (err) return res.status(500).json(err);
+            res.json({ message: "User Deleted Successfully" });
+        }
+    );
+
+});
+
+router.post("/request-edit", (req, res) => {
+
+    const { production_id, requested_by } = req.body;
+
+    if (!production_id || !requested_by) {
+        return res.status(400).json({
+            message: "Missing Data"
+        });
+    }
+
+    db.run(
+        `INSERT INTO edit_requests
+        (production_id, requested_by)
+        VALUES (?, ?)`,
+        [production_id, requested_by],
+        function (err) {
+
+            if (err) {
+                return res.status(500).json(err);
+            }
+
+            res.json({
+                success: true,
+                message: "Edit Request Sent Successfully"
+            });
+
+        }
+    );
+
+});
+router.get("/edit-requests", (req, res) => {
+
+    db.all(
+        `SELECT
+            id,
+            production_id,
+            requested_by,
+            status,
+            created_at
+         FROM edit_requests
+         ORDER BY id DESC`,
+        [],
+        (err, rows) => {
+
+            if (err) {
+                return res.status(500).json(err);
+            }
+
+            res.json(rows);
+
+        }
+    );
+
+});
+router.put("/approve-request/:id", (req, res) => {
+
+    const id = req.params.id;
+
+    db.run(
+        `UPDATE edit_requests
+         SET status = 'Approved'
+         WHERE id = ?`,
+        [id],
+        function (err) {
+
+            if (err) {
+                return res.status(500).json(err);
+            }
+
+            res.json({
+                success: true,
+                message: "Request Approved Successfully"
+            });
+
+        }
+    );
+
+});
 module.exports = router;

@@ -1,6 +1,6 @@
 // Branch dropdown লোড করা
 async function loadBranches() {
-    const res = await fetch("http://localhost:3000/api/production/branches");
+    const res = await fetch("/api/production/branches");
     const branches = await res.json();
 
     const branchSelect = document.getElementById("transBranch");
@@ -21,7 +21,7 @@ document.getElementById("prodReportBtn").addEventListener("click", async () => {
         return;
     }
 
-    const res = await fetch(`http://localhost:3000/api/production/report?from=${from}&to=${to}`);
+    const res = await fetch(`/api/production/report?from=${from}&to=${to}`);
     const data = await res.json();
 
     const tbody = document.getElementById("prodReportBody");
@@ -56,7 +56,7 @@ document.getElementById("transReportBtn").addEventListener("click", async () => 
         return;
     }
 
-    const res = await fetch(`http://localhost:3000/api/transfer/report?from=${from}&to=${to}&branch=${branch}`);
+    const res = await fetch(`/api/transfer/report?from=${from}&to=${to}&branch=${branch}`);
     const data = await res.json();
 
     const tbody = document.getElementById("transReportBody");

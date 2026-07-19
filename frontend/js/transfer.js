@@ -4,7 +4,7 @@ let itemList = [];
 
 async function loadItems() {
     try {
-        const res = await fetch("http://localhost:3000/api/production/items");
+        const res = await fetch("/api/production/items");
         itemList = await res.json();
     } catch (err) {
         console.error("Item Load Error:", err);
@@ -13,7 +13,7 @@ async function loadItems() {
 
 async function loadBranches() {
     try {
-        const res = await fetch("http://localhost:3000/api/production/branches");
+        const res = await fetch("/api/production/branches");
         const branches = await res.json();
 
         const branchSelect = document.getElementById("branch");
@@ -101,7 +101,7 @@ document.getElementById("saveBtn").addEventListener("click", async () => {
     });
 
     try {
-        const response = await fetch("http://localhost:3000/api/transfer/save", {
+        const response = await fetch("/api/transfer/save", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

@@ -1,7 +1,7 @@
 async function loadEditRequests() {
 
     const response = await fetch(
-        "http://localhost:3000/api/production/edit-requests"
+        "/api/production/edit-requests"
     );
 
     const data = await response.json();
@@ -39,7 +39,7 @@ loadEditRequests();
 async function approveRequest(id) {
 
     const response = await fetch(
-        `http://localhost:3000/api/production/approve-request/${id}`,
+        `/api/production/approve-request/${id}`,
         {
             method: "PUT"
         }

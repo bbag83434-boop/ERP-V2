@@ -20,7 +20,7 @@ document.getElementById("printBtn").addEventListener("click", function () {
 async function loadDashboard() {
 
     const response = await fetch(
-        "http://localhost:3000/api/production/count"
+        "/api/production/count"
     );
 
     const data = await response.json();
@@ -34,7 +34,7 @@ loadDashboard();
 async function loadTodayProduction() {
 
     const response = await fetch(
-        "http://localhost:3000/api/production/today"
+        "/api/production/today"
     );
 
     const data = await response.json();
@@ -53,7 +53,7 @@ document.getElementById("saveItemBtn").addEventListener("click", async () => {
         return;
     }
 
-    const res = await fetch("http://localhost:3000/api/production/items", {
+    const res = await fetch("/api/production/items", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -75,7 +75,7 @@ document.getElementById("saveItemBtn").addEventListener("click", async () => {
 
 async function loadItemList() {
 
-    const res = await fetch("http://localhost:3000/api/production/items");
+    const res = await fetch("/api/production/items");
     const items = await res.json();
 
     const tbody = document.getElementById("itemListBody");
@@ -99,7 +99,7 @@ async function deleteItem(id) {
     const ok = confirm("Are you sure you want to delete this item?");
     if (!ok) return;
 
-    const res = await fetch(`http://localhost:3000/api/production/items/${id}`, {
+    const res = await fetch(`/api/production/items/${id}`, {
         method: "DELETE"
     });
 
@@ -121,7 +121,7 @@ document.getElementById("saveBranchBtn").addEventListener("click", async () => {
         return;
     }
 
-    const res = await fetch("http://localhost:3000/api/production/branches", {
+    const res = await fetch("/api/production/branches", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -143,7 +143,7 @@ document.getElementById("saveBranchBtn").addEventListener("click", async () => {
 
 async function loadBranchList() {
 
-    const res = await fetch("http://localhost:3000/api/production/branches");
+    const res = await fetch("/api/production/branches");
     const branches = await res.json();
 
     const tbody = document.getElementById("branchListBody");
@@ -167,7 +167,7 @@ async function deleteBranch(id) {
     const ok = confirm("Are you sure you want to delete this branch?");
     if (!ok) return;
 
-    const res = await fetch(`http://localhost:3000/api/production/branches/${id}`, {
+    const res = await fetch(`/api/production/branches/${id}`, {
         method: "DELETE"
     });
 
@@ -192,7 +192,7 @@ document.getElementById("saveUserBtn").addEventListener("click", async () => {
         return;
     }
 
-    const res = await fetch("http://localhost:3000/api/production/users", {
+    const res = await fetch("/api/production/users", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -213,7 +213,7 @@ document.getElementById("saveUserBtn").addEventListener("click", async () => {
 
 async function loadUserList() {
 
-    const res = await fetch("http://localhost:3000/api/production/users");
+    const res = await fetch("/api/production/users");
     const users = await res.json();
 
     const tbody = document.getElementById("userListBody");
@@ -238,7 +238,7 @@ async function deleteUser(id) {
     const ok = confirm("এই User টি ডিলিট করতে চান?");
     if (!ok) return;
 
-    const res = await fetch(`http://localhost:3000/api/production/users/${id}`, {
+    const res = await fetch(`/api/production/users/${id}`, {
         method: "DELETE"
     });
 

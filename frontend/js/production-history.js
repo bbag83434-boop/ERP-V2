@@ -5,7 +5,7 @@ if (!loggedInUser) {
 }
 async function loadHistory() {
 
-    const response = await fetch("http://localhost:3000/api/production/all");
+    const response = await fetch("/api/production/all");
 
     const data = await response.json();
 
@@ -52,7 +52,7 @@ loadHistory();
 async function requestEdit(id) {
 
     const response = await fetch(
-        "http://localhost:3000/api/production/request-edit",
+        "/api/production/request-edit",
         {
             method: "POST",
             headers: {
@@ -77,7 +77,7 @@ async function deleteProduction(id) {
     if (!ok) return;
 
     const response = await fetch(
-        `http://localhost:3000/api/production/delete/${id}`,
+        `/api/production/delete/${id}`,
         {
             method: "DELETE"
         }
@@ -101,7 +101,7 @@ async function editProduction(id) {
     if (!item || !qty || !unit) return;
 
     const response = await fetch(
-        `http://localhost:3000/api/production/update/${id}`,
+        `/api/production/update/${id}`,
         {
             method: "PUT",
             headers: {
@@ -136,7 +136,7 @@ async function searchByDate() {
     }
 
     const response = await fetch(
-        `http://localhost:3000/api/production/date/${date}`
+        `/api/production/date/${date}`
     );
 
     let data = await response.json();

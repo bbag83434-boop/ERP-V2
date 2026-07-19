@@ -9,7 +9,7 @@ async function loadStock() {
         return;
     }
 
-    const res = await fetch(`http://localhost:3000/api/production/stock/${month}`);
+    const res = await fetch(`/api/production/stock/${month}`);
     const data = await res.json();
 
     const tbody = document.getElementById("stockTableBody");

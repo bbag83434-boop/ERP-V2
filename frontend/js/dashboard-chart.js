@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (!canvas) return;
 
-    const response = await fetch("http://localhost:3000/api/production/chart");
+    const response = await fetch("/api/production/chart");
 
     const rows = await response.json();
 

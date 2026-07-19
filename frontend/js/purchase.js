@@ -209,7 +209,7 @@ async function loadSuppliers() {
 }
 async function loadItems() {
 
-    const res = await fetch("http://localhost:3000/api/store-items");
+    const res = await fetch("/api/store-items");
 
     const result = await res.json();
 
@@ -238,7 +238,7 @@ async function loadItems() {
 }
 async function loadBranches() {
     try {
-        const res = await fetch("http://localhost:3000/api/production/branches");
+        const res = await fetch("/api/production/branches");
         const branches = await res.json();
 
         const branchSelect = document.getElementById("branch");
@@ -259,7 +259,7 @@ async function loadBranches() {
 }
 async function savePurchase() {
 
-    const res = await fetch("http://localhost:3000/api/purchase/save", {
+    const res = await fetch("/api/purchase/save", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"

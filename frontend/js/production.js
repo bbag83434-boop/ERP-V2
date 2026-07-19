@@ -30,7 +30,7 @@ rows.forEach(row => {
 console.log(productionData);
     try {
 
-        const response = await fetch("http://localhost:3000/api/production/save", {
+        const response = await fetch("/api/production/save", {
 
             method: "POST",
 
@@ -69,7 +69,7 @@ console.log(productionData);
      let itemList = [];
      async function loadItems() {
     try {
-        const res = await fetch("http://localhost:3000/api/production/items");
+        const res = await fetch("/api/production/items");
         itemList = await res.json();
 
         console.log(itemList);

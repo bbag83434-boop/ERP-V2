@@ -3,7 +3,7 @@
 // Supplier Master
 // ==========================================
 
-const API = "http://localhost:3000/api/suppliers";
+const API = "/api/suppliers";
 
 // =============================
 // Load Supplier List

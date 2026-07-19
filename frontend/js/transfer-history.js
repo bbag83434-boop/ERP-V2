@@ -1,6 +1,6 @@
 async function loadHistory() {
 
-    const response = await fetch("http://localhost:3000/api/transfer/all");
+    const response = await fetch("/api/transfer/all");
     const data = await response.json();
 
     const tbody = document.getElementById("historyTableBody");
@@ -35,7 +35,7 @@ async function deleteTransfer(id) {
     if (!ok) return;
 
     const response = await fetch(
-        `http://localhost:3000/api/transfer/delete/${id}`,
+        `/api/transfer/delete/${id}`,
         { method: "DELETE" }
     );
 
@@ -57,7 +57,7 @@ async function editTransfer(id) {
     if (!branch || !item || !qty || !unit) return;
 
     const response = await fetch(
-        `http://localhost:3000/api/transfer/update/${id}`,
+        `/api/transfer/update/${id}`,
         {
             method: "PUT",
             headers: {

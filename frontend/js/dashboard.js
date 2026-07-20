@@ -26,7 +26,7 @@ document.getElementById("confirmNewMonthBtn").addEventListener("click", async fu
 
     const data = await res.json();
 
-    alert(data.message);
+    showToast(data.message);
 
     document.getElementById("newMonthForm").style.display = "none";
 
@@ -289,7 +289,7 @@ lockMonthBtn.addEventListener("click", async () => {
 
     if (!month) return;
 
-    const res = await fetch("http://localhost:3000/api/production/lock-month", {
+    const res = await fetch("/api/production/lock-month", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -299,7 +299,7 @@ lockMonthBtn.addEventListener("click", async () => {
 
     const data = await res.json();
 
-    alert(data.message);
+    showToast(data.message, "success");
 
 });
 const historyBtn = document.getElementById("historyBtn");
@@ -351,8 +351,31 @@ async function unlockMonth(month) {
 
     const data = await res.json();
 
-    alert(data.message);
+    showToast(data.message, "success");
 
-    document.getElementById("historyBtn").click();
+   // document.getElementById("historyBtn").click();
+   location.reload();
 
+}
+function showToast(message, type = "success") {
+
+    const toast = document.getElementById("appToast");
+    const toastMessage = document.getElementById("toastMessage");
+
+    toast.classList.remove(
+        "text-bg-success",
+        "text-bg-danger",
+        "text-bg-warning",
+        "text-bg-info"
+    );
+
+    toast.classList.add(`text-bg-${type}`);
+
+    toastMessage.innerText = message;
+
+    const bsToast = new bootstrap.Toast(toast, {
+        delay: 3000
+    });
+
+    bsToast.show();
 }

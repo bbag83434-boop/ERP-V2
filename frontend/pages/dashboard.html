@@ -316,12 +316,7 @@
     </div>
 </div>
 
-<!-- Bootstrap JS bundle (includes Popper, needed for offcanvas) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
-<script src="../js/auth.js"></script>
-<script src="../js/dashboard.js"></script>
-<script src="../vendor/chart.min.js"></script>
-<script src="../js/dashboard-chart.js"></script>
+
 <!-- Month History Modal -->
 <div class="modal fade" id="monthHistoryModal" tabindex="-1">
     <div class="modal-dialog modal-lg">
@@ -379,6 +374,148 @@
     </div>
 
 </div>
+<!-- Export Excel Modal -->
+<div class="modal fade" id="exportModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Export Excel</h5>
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="form-check">
+                    <input class="form-check-input"
+                           type="radio"
+                           name="exportType"
+                           value="production"
+                           checked>
+
+                    <label class="form-check-label">
+                        Production
+                    </label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input"
+                           type="radio"
+                           name="exportType"
+                           value="transfer">
+
+                    <label class="form-check-label">
+                        Transfer
+                    </label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input"
+                           type="radio"
+                           name="exportType"
+                           value="stock">
+
+                    <label class="form-check-label">
+                        Stock
+                    </label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input"
+                           type="radio"
+                           name="exportType"
+                           value="report">
+
+                    <label class="form-check-label">
+                        Reports
+                    </label>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-success"
+                        id="downloadExcelBtn">
+                    Download
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Report Export Modal -->
+<div class="modal fade" id="reportModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Export Report</h5>
+
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal">
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="mb-3">
+                    <label class="form-label">From Date</label>
+                    <input
+                        type="date"
+                        class="form-control"
+                        id="reportFromDate">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">To Date</label>
+                    <input
+                        type="date"
+                        class="form-control"
+                        id="reportToDate">
+                </div>
+
+                <div class="mb-3">
+    <label class="form-label">Outlet</label>
+
+    <select
+        class="form-select"
+        id="reportBranch">
+         
+        
+
+    </select>
+</div>
+
+            <div class="modal-footer">
+
+                <button
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal">
+                    Close
+                </button>
+
+                <button
+                    class="btn btn-primary"
+                    id="downloadReportBtn">
+                    Download
+                </button>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- Bootstrap JS bundle (includes Popper, needed for offcanvas) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<script src="../js/auth.js"></script>
+<script src="../js/dashboard.js"></script>
+<script src="../vendor/chart.min.js"></script>
+<script src="../js/dashboard-chart.js"></script>
 </body>
 
 </html>

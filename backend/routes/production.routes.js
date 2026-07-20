@@ -1,8 +1,9 @@
 const express = require("express");
+
 const router = express.Router();
 
 const db = require("../config/db");
-
+const ExcelJS = require("exceljs");
 router.post("/save", (req, res) => {
 console.log(req.body);
     const { date, productionData } = req.body;
@@ -366,6 +367,292 @@ router.get("/stock/:month", (req, res) => {
     });
 
 });
+router.get("/export-stock-excel/:month", async (req, res) => {
+
+    const month = req.params.month;
+    const workbook = new ExcelJS.Workbook();
+const sheet = workbook.addWorksheet("Stock Report");
+
+// Company Name
+sheet.mergeCells("A1:F1");
+sheet.getCell("A1").value = "CHEF BISU";
+sheet.getCell("A1").font = {
+    bold: true,
+    size: 18
+};
+sheet.getCell("A1").alignment = {
+    horizontal: "center"
+};
+
+// Report Title
+sheet.mergeCells("A2:F2");
+sheet.getCell("A2").value = "STOCK REPORT";
+sheet.getCell("A2").font = {
+    bold: true,
+    size: 14
+};
+sheet.getCell("A2").alignment = {
+    horizontal: "center"
+};
+
+// Month
+sheet.mergeCells("A3:F3");
+sheet.getCell("A3").value = "Month : " + month;
+sheet.getCell("A3").alignment = {
+    horizontal: "right"
+};
+
+sheet.addRow([]);
+
+// Header
+sheet.addRow([
+    "Item",
+    "Opening",
+    "In (Production)",
+    "Out (Transfer)",
+    "Closing"
+]);
+const headerRow = sheet.getRow(5);
+
+headerRow.eachCell((cell) => {
+
+    cell.font = {
+        bold: true,
+        color: { argb: "FFFFFFFF" }
+    };
+
+    cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "1F4E78" }
+    };
+
+    cell.alignment = {
+        horizontal: "center",
+        vertical: "middle"
+    };
+
+    cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" }
+    };
+
+});
+db.all(
+    "SELECT item_name FROM items ORDER BY item_name ASC",
+    [],
+    (err, items) => {
+
+        if (err) {
+            return res.status(500).json(err);
+        }
+
+        let completed = 0;
+        let totalOpening = 0;
+        let grandTotalIn = 0;
+        let grandTotalOut = 0;
+        let totalClosing = 0;
+        if (items.length === 0) {
+            return res.json([]);
+        }
+
+        items.forEach((itemRow) => {
+
+            const itemName = itemRow.item_name;
+            db.get(
+    "SELECT opening_qty FROM opening_stock WHERE month = ? AND item = ?",
+    [month, itemName],
+    (err, openingRow) => {
+
+        const opening = openingRow
+            ? openingRow.opening_qty
+            : 0;
+            db.get(
+    `SELECT SUM(qty) AS total
+     FROM production
+     WHERE item = ?
+     AND strftime('%Y-%m', date) = ?`,
+    [itemName, month],
+    (err, inRow) => {
+
+        const totalIn =
+            inRow && inRow.total
+                ? inRow.total
+                : 0;
+                db.get(
+    `SELECT SUM(qty) AS total
+     FROM transfers
+     WHERE item = ?
+     AND strftime('%Y-%m', date) = ?`,
+    [itemName, month],
+    async(err, outRow) => {
+
+        const totalOut =
+            outRow && outRow.total
+                ? outRow.total
+                : 0;
+                const closing =
+    Number(opening) +
+    Number(totalIn) -
+    Number(totalOut);
+    totalOpening += Number(opening);
+    grandTotalIn += Number(totalIn);
+    grandTotalOut += Number(totalOut);
+    totalClosing += Number(closing);
+sheet.addRow([
+    itemName,
+    opening,
+    totalIn,
+    totalOut,
+    closing
+]);
+const dataRow = sheet.lastRow;
+
+dataRow.eachCell((cell) => {
+
+    cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" }
+    };
+
+    cell.alignment = {
+        horizontal: "center",
+        vertical: "middle"
+    };
+
+});
+completed++;
+
+if (completed === items.length) {
+sheet.addRow([]);
+const summaryTitle = sheet.addRow(["STOCK SUMMARY"]);
+
+summaryTitle.font = {
+    bold: true,
+    size: 13,
+    color: { argb: "FFFFFFFF" }
+};
+
+summaryTitle.fill = {
+    type: "pattern",
+    pattern: "solid",
+    fgColor: { argb: "1F4E78" }
+};
+
+summaryTitle.alignment = {
+    horizontal: "center"
+};
+
+sheet.mergeCells(`A${summaryTitle.number}:B${summaryTitle.number}`);
+
+const summaryRows = [
+    ["Total Opening", totalOpening],
+    ["Total Production In", grandTotalIn],
+    ["Total Transfer Out", grandTotalOut],
+    ["Total Closing", totalClosing]
+];
+
+summaryRows.forEach(data => {
+
+    const row = sheet.addRow(data);
+
+    row.eachCell(cell => {
+
+        cell.border = {
+            top: { style: "thin" },
+            left: { style: "thin" },
+            bottom: { style: "thin" },
+            right: { style: "thin" }
+        };
+
+        cell.alignment = {
+            vertical: "middle"
+        };
+
+    });
+const closingRow = sheet.getRow(sheet.rowCount);
+
+closingRow.eachCell(cell => {
+
+    cell.font = {
+        bold: true,
+        color: { argb: "FFFFFFFF" }
+    };
+
+    cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "2F75B5" }
+    };
+
+});
+    row.getCell(1).font = {
+        bold: true
+    };
+
+    row.getCell(2).alignment = {
+        horizontal: "right"
+    };
+
+});
+    res.setHeader(
+        "Content-Type",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    );
+
+    res.setHeader(
+        "Content-Disposition",
+        "attachment; filename=Stock_Report.xlsx"
+    );
+sheet.columns.forEach((column) => {
+
+    let maxLength = 12;
+
+    column.eachCell({ includeEmpty: true }, (cell) => {
+
+        const length = cell.value
+            ? cell.value.toString().length
+            : 10;
+
+        if (length > maxLength) {
+            maxLength = length;
+        }
+
+    });
+
+    column.width = maxLength + 4;
+
+});
+    await workbook.xlsx.write(res);
+    res.end();
+
+}
+}
+
+                            );
+
+                        }
+
+                    );
+
+                }
+
+            );
+
+        });
+
+    }
+
+);
+});
+    // এখান থেকে আমরা উপরের Stock Logic ব্যবহার করব
+    // শেষে Excel Generate করে Download করাব
+
+
 router.get("/chart", (req, res) => {
 
     db.all(`
@@ -386,7 +673,7 @@ router.get("/chart", (req, res) => {
 
     });
     });
-    router.get("/report", (req, res) => {
+   router.get("/report", (req, res) => {
 
     const { from, to } = req.query;
 
@@ -407,6 +694,183 @@ router.get("/chart", (req, res) => {
         }
     );
     });
+    router.get("/export-report-excel", async (req, res) => {
+
+    const { from, to } = req.query;
+
+    if (!from || !to) {
+        return res.status(400).json({
+            message: "From and To date required"
+        });
+    }
+
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet("Report");
+
+
+// Company Name
+sheet.mergeCells("A1:C1");
+sheet.getCell("A1").value = "CHEF BISU";
+sheet.getCell("A1").font = {
+    bold: true,
+    size: 18
+};
+sheet.getCell("A1").alignment = {
+    horizontal: "center"
+};
+
+// Report Title
+sheet.mergeCells("A2:C2");
+sheet.getCell("A2").value = "PRODUCTION REPORT";
+sheet.getCell("A2").font = {
+    bold: true,
+    size: 14
+};
+sheet.getCell("A2").alignment = {
+    horizontal: "center"
+};
+
+// Date Range
+sheet.mergeCells("A3:C3");
+sheet.getCell("A3").value = `From : ${from}   To : ${to}`;
+sheet.getCell("A3").alignment = {
+    horizontal: "right"
+};
+
+sheet.addRow([]);
+sheet.addRow([
+    "Item",
+    "Total Qty",
+    "Unit"
+]);
+
+const headerRow = sheet.getRow(5);
+
+headerRow.eachCell((cell) => {
+
+    cell.font = {
+        bold: true,
+        color: { argb: "FFFFFFFF" }
+    };
+
+    cell.fill = {
+        type: "pattern",
+        pattern: "solid",
+        fgColor: { argb: "1F4E78" }
+    };
+
+    cell.alignment = {
+        horizontal: "center",
+        vertical: "middle"
+    };
+
+    cell.border = {
+        top: { style: "thin" },
+        left: { style: "thin" },
+        bottom: { style: "thin" },
+        right: { style: "thin" }
+    };
+
+});
+db.all(
+    `SELECT item, SUM(qty) AS total_qty, unit
+     FROM production
+     WHERE date BETWEEN ? AND ?
+     GROUP BY item, unit
+     ORDER BY item ASC`,
+    [from, to],
+    async (err, rows) => {
+
+        if (err) {
+            return res.status(500).json(err);
+        }
+           console.log(rows);
+        rows.forEach(row => {
+
+            sheet.addRow([
+                row.item,
+                row.total_qty,
+                row.unit
+            ]);
+
+        });
+
+    
+    sheet.columns.forEach((column) => {
+
+            let maxLength = 12;
+
+            column.eachCell({ includeEmpty: true }, (cell) => {
+
+                const length = cell.value
+                    ? cell.value.toString().length
+                    : 10;
+
+                if (length > maxLength) {
+                    maxLength = length;
+                }
+
+            });
+
+            column.width = maxLength + 4;
+
+        });
+
+        res.setHeader(
+            "Content-Type",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        );
+
+        res.setHeader(
+            "Content-Disposition",
+            "attachment; filename=Production_Report.xlsx"
+        );
+
+        await workbook.xlsx.write(res);
+        res.end();
+    }
+);
+});
+router.get("/export-outlet-report", async (req, res) => {
+
+    const { from, to, branch } = req.query;
+
+    console.log(from);
+    console.log(to);
+    console.log(branch);
+db.all(
+    `
+    SELECT
+        item,
+        SUM(qty) AS total_qty,
+        unit
+    FROM transfer
+    WHERE branch = ?
+      AND date BETWEEN ? AND ?
+    GROUP BY item, unit
+    ORDER BY item ASC
+    `,
+    [branch, from, to],
+    (err, rows) => {
+
+        if (err) {
+            return res.status(500).json(err);
+        }
+
+        console.log(rows);
+
+        res.json(rows);
+    }
+);
+
+return;
+    res.json({
+        from,
+        to,
+        branch
+    });
+
+});
 router.get("/users", (req, res) => {
 
     db.all(
@@ -549,8 +1013,6 @@ router.post("/create-month", (req, res) => {
             return res.json({ message: "কোনো Item নেই" });
         }
 
-        let completed = 0;
-
         items.forEach((itemRow) => {
 
             const itemName = itemRow.item_name;
@@ -582,6 +1044,7 @@ router.post("/create-month", (req, res) => {
                                     const totalOut = outRow && outRow.total ? outRow.total : 0;
 
                                     const closing = Number(opening) + Number(totalIn) - Number(totalOut);
+                                    totalOpening += Number(opening);
 
                                     // ৫. এই closing কে toMonth এর opening হিসেবে বসানো
                                     db.run(
@@ -653,6 +1116,75 @@ router.post("/unlock-month", (req, res) => {
         function (err) {
             if (err) return res.status(500).json(err);
             res.json({ message: `${month} Unlock করা হয়েছে` });
+        }
+    );
+
+});
+router.get("/export-excel", async (req, res) => {
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Production");
+
+    worksheet.columns = [
+        { header: "ID", key: "id", width: 10 },
+        { header: "Date", key: "date", width: 15 },
+        { header: "Item", key: "item", width: 30 },
+        { header: "Quantity", key: "qty", width: 15 },
+        { header: "Unit", key: "unit", width: 10 }
+    ];
+
+    db.all(
+        "SELECT * FROM production ORDER BY date DESC",
+        [],
+        async (err, rows) => {
+
+            if (err) {
+                return res.status(500).json(err);
+            }
+
+            rows.forEach(row => {
+                worksheet.addRow(row);
+            });
+            const summary = {};
+
+rows.forEach(row => {
+
+    const key = `${row.item}_${row.unit}`;
+
+    if (!summary[key]) {
+        summary[key] = {
+            item: row.item,
+            unit: row.unit,
+            total: 0
+        };
+    }
+
+    summary[key].total += Number(row.qty);
+
+});
+worksheet.addRow([]);
+worksheet.addRow(["Production Summary"]);
+worksheet.addRow(["Item", "Total Qty", "Unit"]);
+
+Object.values(summary).forEach(data => {
+    worksheet.addRow([
+        data.item,
+        data.total,
+        data.unit
+    ]);
+});
+            res.setHeader(
+                "Content-Type",
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            );
+
+            res.setHeader(
+                "Content-Disposition",
+                "attachment; filename=Production_Report.xlsx"
+            );
+
+            await workbook.xlsx.write(res);
+            res.end();
         }
     );
 

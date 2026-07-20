@@ -41,7 +41,13 @@ document.getElementById("historyBtn").addEventListener("click", function () {
 });
 
 document.getElementById("exportBtn").addEventListener("click", function () {
-    alert("Export Excel");
+
+    const modal = new bootstrap.Modal(
+        document.getElementById("exportModal")
+    );
+
+    modal.show();
+
 });
 
 document.getElementById("printBtn").addEventListener("click", function () {
@@ -211,6 +217,28 @@ async function deleteBranch(id) {
 
 
 loadBranchList();
+async function loadReportBranches() {
+
+    const res = await fetch("/api/production/branches");
+    const branches = await res.json();
+
+    const select = document.getElementById("reportBranch");
+
+    select.innerHTML = "";
+
+    branches.forEach(branch => {
+
+        select.innerHTML += `
+            <option value="${branch.branch_name}">
+                ${branch.branch_name}
+            </option>
+        `;
+
+    });
+
+}
+
+loadReportBranches();
 document.getElementById("saveUserBtn").addEventListener("click", async () => {
 
     const username = document.getElementById("newUsername").value.trim();
@@ -379,3 +407,76 @@ function showToast(message, type = "success") {
 
     bsToast.show();
 }
+document.getElementById("downloadExcelBtn").addEventListener("click", function () {
+   
+    const selected = document.querySelector(
+        'input[name="exportType"]:checked'
+    ).value;
+
+    switch (selected) {
+
+        case "production":
+            window.location.href = "/api/production/export-excel";
+            break;
+
+        case "transfer":
+            window.location.href = "/api/transfer/export-excel";
+            break;
+
+        case "stock": {
+    const month = new Date().toISOString().slice(0, 7);
+    window.location.href = `/api/production/export-stock-excel/${month}`;
+    break;
+}
+
+        case "report":
+
+    new bootstrap.Modal(
+        document.getElementById("reportModal")
+    ).show();
+
+    break;
+
+        default:
+            alert("Please select a report.");
+    }
+
+});
+//document.getElementById("downloadReportBtn").addEventListener("click", () => {
+
+    //const from = document.getElementById("reportFromDate").value;
+    //const to = document.getElementById("reportToDate").value;
+   // const type = document.getElementById("reportType").value;
+
+    //if (!from || !to) {
+       /// alert("Please select From Date and To Date");
+       // return;
+    //}
+
+    //if (type === "production") {
+
+        //window.location.href =
+           // `/api/production/export-report-excel?from=${from}&to=${to}`;
+
+    //} else {
+
+       // alert(type + " Report is coming in next lesson.");
+
+   // }
+
+//});
+document.getElementById("downloadReportBtn").addEventListener("click", () => {
+
+    const from = document.getElementById("reportFromDate").value;
+    const to = document.getElementById("reportToDate").value;
+    const branch = document.getElementById("reportBranch").value;
+
+    if (!from || !to || !branch) {
+        alert("Date এবং Outlet নির্বাচন করুন");
+        return;
+    }
+
+    window.location.href =
+        `/api/transfer/report?from=${from}&to=${to}&branch=${encodeURIComponent(branch)}`;
+
+});

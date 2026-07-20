@@ -5,34 +5,83 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chef Bisu Login</title>
-    <link rel="stylesheet" href="../css/login.css">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e2a3a 0%, #2c3e50 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 380px;
+            border: none;
+            border-radius: 0.75rem;
+        }
+
+        .login-card .brand-icon {
+            width: 56px;
+            height: 56px;
+            background-color: #1e2a3a;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        .subtitle {
+            color: #6c757d;
+            font-size: 0.85rem;
+        }
+    </style>
 </head>
 
 <body>
-     <div class="login-box">
-     <h1>Chef Bisu </h1>
-     <p class="subtitle">Store & Production Management System</p>
 
-    <form id="loginForm">
+    <div class="card shadow login-card">
+        <div class="card-body p-4 p-sm-5 text-center">
 
-        <label>Username</label>
-        <br>
+            <div class="brand-icon">
+                <i class="bi bi-shop"></i>
+            </div>
 
-        <input type="text"  id="username" placeholder="Enter Username">
+            <h1 class="h3 mb-1">Chef Bisu</h1>
+            <p class="subtitle mb-4">Store &amp; Production Management System</p>
 
-        <br><br>
+            <form id="loginForm" class="text-start">
 
-        <label>Password</label>
-        <br>
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <input type="text" id="username" class="form-control" placeholder="Enter Username">
+                </div>
 
-        <input type="password" id="password"placeholder="Enter Password">
+                <div class="mb-4">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Enter Password">
+                </div>
 
-        <br><br>
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="bi bi-box-arrow-in-right me-1"></i>Login
+                </button>
 
-        <button type="submit">Login</button>
+            </form>
 
-    </form>
-         <script src="../js/login.js"></script>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/login.js"></script>
+
 </body>
 
 </html>

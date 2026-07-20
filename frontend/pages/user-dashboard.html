@@ -1,56 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chef Bisu - User Dashboard</title>
 
-    <link rel="stylesheet" href="../css/dashboard.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <style>
+        body { background-color: #f4f6f9; }
+
+        .menu-card {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .menu-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
+        }
+        .menu-card .icon {
+            font-size: 2rem;
+            color: #1e2a3a;
+        }
+    </style>
 </head>
 
 <body>
 
-<div class="main" style="margin: 0 auto; max-width: 700px;">
-
-    <div class="header">
-        <h1>Welcome</h1>
-        <div class="profile">
-            <span id="userNameDisplay">👤 User</span>
-            <button id="logoutBtn">Logout</button>
+    <div class="bg-white border-bottom px-3 py-2 d-flex justify-content-between align-items-center sticky-top">
+        <h1 class="h4 mb-0">Welcome</h1>
+        <div class="d-flex align-items-center gap-3">
+            <span id="userNameDisplay"><i class="bi bi-person-circle me-1"></i>User</span>
+            <button id="logoutBtn" class="btn btn-primary btn-sm">Logout</button>
         </div>
     </div>
 
-    <div class="cards" style="grid-template-columns: repeat(2, 1fr); gap: 20px; margin-top: 30px;">
+    <div class="container py-4" style="max-width: 700px;">
 
-        <div class="card" style="text-align: center;">
-            <a href="production.html" style="text-decoration:none; color:inherit;">
-                🏭 <br> Production Entry
-            </a>
-        </div>
+        <div class="row g-3">
 
-        <div class="card" style="text-align: center;">
-            <a href="production-history.html" style="text-decoration:none; color:inherit;">
-                📋 <br> Production History
-            </a>
-        </div>
+            <div class="col-6">
+                <a href="production.html" class="card menu-card h-100">
+                    <div class="card-body text-center py-4">
+                        <div class="icon mb-2"><i class="bi bi-building"></i></div>
+                        <div>Production Entry</div>
+                    </div>
+                </a>
+            </div>
 
-        <div class="card" style="text-align: center;">
-            <a href="transfer.html" style="text-decoration:none; color:inherit;">
-                🚚 <br> Transfer Entry
-            </a>
-        </div>
+            <div class="col-6">
+                <a href="production-history.html" class="card menu-card h-100">
+                    <div class="card-body text-center py-4">
+                        <div class="icon mb-2"><i class="bi bi-clipboard-data"></i></div>
+                        <div>Production History</div>
+                    </div>
+                </a>
+            </div>
 
-        <div class="card" style="text-align: center;">
-            <a href="transfer-history.html" style="text-decoration:none; color:inherit;">
-                📋 <br> Transfer History
-            </a>
+            <div class="col-6">
+                <a href="transfer.html" class="card menu-card h-100">
+                    <div class="card-body text-center py-4">
+                        <div class="icon mb-2"><i class="bi bi-truck"></i></div>
+                        <div>Transfer Entry</div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-6">
+                <a href="transfer-history.html" class="card menu-card h-100">
+                    <div class="card-body text-center py-4">
+                        <div class="icon mb-2"><i class="bi bi-clipboard-data"></i></div>
+                        <div>Transfer History</div>
+                    </div>
+                </a>
+            </div>
+
         </div>
 
     </div>
 
-</div>
-
-<script src="../js/user-dashboard.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/user-dashboard.js"></script>
 
 </body>
 </html>

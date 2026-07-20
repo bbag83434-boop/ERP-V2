@@ -139,8 +139,18 @@
             <!-- Action bar -->
             <div class="d-flex flex-wrap gap-2 mb-3">
                 <button id="newMonthBtn" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg me-1"></i>Create New Month</button>
+                <div id="newMonthForm" style="display:none; margin-top:15px;">
+    <label>From Month</label>
+    <input type="month" id="fromMonthInput">
+
+    <label>To Month</label>
+    <input type="month" id="toMonthInput">
+
+    <button id="confirmNewMonthBtn">Confirm</button>
+</div>
                 <button id="lockMonthBtn" class="btn btn-warning btn-sm"><i class="bi bi-lock me-1"></i>Month Lock</button>
                 <button id="historyBtn" class="btn btn-info btn-sm text-white"><i class="bi bi-folder2-open me-1"></i>Month History</button>
+
                 <button id="exportBtn" class="btn btn-success btn-sm"><i class="bi bi-file-earmark-excel me-1"></i>Export Excel</button>
                 <button id="printBtn" class="btn btn-secondary btn-sm"><i class="bi bi-printer me-1"></i>Print</button>
             </div>
@@ -248,7 +258,7 @@
                 <div class="col-6 col-md-4 col-xl-2">
                     <div class="card stat-card text-center shadow-sm h-100">
                         <div class="card-body">
-                            <h2>120</h2>
+                            <h2>0</h2>
                             <p>Total Stock</p>
                         </div>
                     </div>
@@ -312,6 +322,41 @@
 <script src="../js/dashboard.js"></script>
 <script src="../vendor/chart.min.js"></script>
 <script src="../js/dashboard-chart.js"></script>
+<!-- Month History Modal -->
+<div class="modal fade" id="monthHistoryModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Month History</h5>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <table class="table table-bordered table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>SL</th>
+                            <th>Locked Month</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="monthHistoryTable">
+
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+</div>
 </body>
 
 </html>

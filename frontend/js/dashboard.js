@@ -1,5 +1,35 @@
 document.getElementById("newMonthBtn").addEventListener("click", function () {
-    alert("Create New Month");
+    const form = document.getElementById("newMonthForm");
+    form.style.display = form.style.display === "none" ? "block" : "none";
+});
+
+document.getElementById("confirmNewMonthBtn").addEventListener("click", async function () {
+
+    const fromMonth = document.getElementById("fromMonthInput").value;
+    const toMonth = document.getElementById("toMonthInput").value;
+
+    if (!fromMonth || !toMonth) {
+        alert("From এবং To মাস সিলেক্ট করুন");
+        return;
+    }
+
+    const ok = confirm(`${fromMonth} এর Closing, ${toMonth} এর Opening হিসেবে সেভ হবে। নিশ্চিত?`);
+    if (!ok) return;
+
+    const res = await fetch("http://localhost:3000/api/production/create-month", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ fromMonth, toMonth })
+    });
+
+    const data = await res.json();
+
+    alert(data.message);
+
+    document.getElementById("newMonthForm").style.display = "none";
+
 });
 
 document.getElementById("lockMonthBtn").addEventListener("click", function () {
@@ -251,3 +281,78 @@ async function deleteUser(id) {
 }
 
 loadUserList();
+const lockMonthBtn = document.getElementById("lockMonthBtn");
+
+lockMonthBtn.addEventListener("click", async () => {
+
+    const month = prompt("Lock করার মাস লিখুন (YYYY-MM)");
+
+    if (!month) return;
+
+    const res = await fetch("http://localhost:3000/api/production/lock-month", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ month })
+    });
+
+    const data = await res.json();
+
+    alert(data.message);
+
+});
+const historyBtn = document.getElementById("historyBtn");
+
+historyBtn.addEventListener("click", async () => {
+
+    const modal = new bootstrap.Modal(
+        document.getElementById("monthHistoryModal")
+    );
+
+    modal.show();
+
+    const tbody = document.getElementById("monthHistoryTable");
+    tbody.innerHTML = "";
+
+    const res = await fetch("/api/production/locked-months");
+    const months = await res.json();
+
+    months.forEach((month, index) => {
+
+        tbody.innerHTML += `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${month}</td>
+                <td>
+                    <button
+                        class="btn btn-danger btn-sm"
+                        onclick="unlockMonth('${month}')">
+                        Unlock
+                    </button>
+                </td>
+            </tr>
+        `;
+
+    });
+
+});
+async function unlockMonth(month) {
+
+    if (!confirm(`${month} Unlock করতে চান?`)) return;
+
+    const res = await fetch("/api/production/unlock-month", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ month })
+    });
+
+    const data = await res.json();
+
+    alert(data.message);
+
+    document.getElementById("historyBtn").click();
+
+}

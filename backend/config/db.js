@@ -285,4 +285,10 @@ db.serialize(() => {
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         )
     `);
+    db.run(`
+CREATE TABLE IF NOT EXISTS locked_months (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    month TEXT UNIQUE NOT NULL
+)
+`);
 });

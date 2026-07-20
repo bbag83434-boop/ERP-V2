@@ -13,46 +13,48 @@ console.log(req.body);
             message: "No Data"
         });
     }
+const entryMonth = date.substring(0, 7); // "2026-07-10" থেকে "2026-07"
 
-    let completed = 0;
+    db.get("SELECT month FROM locked_months WHERE month = ?", [entryMonth], (err, lockedRow) => {
 
-    productionData.forEach((row) => {
+        if (lockedRow) {
+            return res.status(403).json({
+                success: false,
+                message: `${entryMonth} মাস Lock করা আছে, নতুন Entry করা যাবে না`
+            });
+        }
 
-        db.run(
-            `INSERT INTO production(date,item,qty,unit)
-             VALUES(?,?,?,?)`,
-            [
-                date,
-                row.item,
-                row.qty,
-                row.unit
-            ],
-            function (err) {
+        // এখান থেকে আসল save logic শুরু হবে
+        let completed = 0;
+        productionData.forEach((row) => {
 
-                if (err) {
-                    console.log(err);
-                    return res.status(500).json(err);
+            db.run(
+                `INSERT INTO production(date,item,qty,unit)
+                 VALUES(?,?,?,?)`,
+                [date, row.item, row.qty, row.unit],
+                function (err) {
+
+                    if (err) {
+                        console.log(err);
+                        return res.status(500).json(err);
+                    }
+
+                    completed++;
+
+                    if (completed === productionData.length) {
+                        res.json({
+                            success: true,
+                            message: "Production Saved Successfully"
+                        });
+                    }
+
                 }
+            );
 
-                completed++;
-
-                if (completed === productionData.length) {
-
-                    res.json({
-                        success: true,
-                        message: "Production Saved Successfully"
-                    });
-
-                }
-
-            }
-
-        );
+        });
 
     });
-
 });
-
 router.get("/all", (req, res) => {
 
     db.all(
@@ -526,6 +528,131 @@ router.put("/approve-request/:id", (req, res) => {
                 message: "Request Approved Successfully"
             });
 
+        }
+    );
+
+});
+router.post("/create-month", (req, res) => {
+
+    const { fromMonth, toMonth } = req.body;
+
+    if (!fromMonth || !toMonth) {
+        return res.status(400).json({ message: "From এবং To মাস দিন" });
+    }
+
+    // ১. সব item list আনা
+    db.all("SELECT item_name FROM items", [], (err, items) => {
+
+        if (err) return res.status(500).json(err);
+
+        if (items.length === 0) {
+            return res.json({ message: "কোনো Item নেই" });
+        }
+
+        let completed = 0;
+
+        items.forEach((itemRow) => {
+
+            const itemName = itemRow.item_name;
+
+            // ২. fromMonth এর Opening আনা
+            db.get(
+                "SELECT opening_qty FROM opening_stock WHERE month = ? AND item = ?",
+                [fromMonth, itemName],
+                (err, openingRow) => {
+
+                    const opening = openingRow ? openingRow.opening_qty : 0;
+
+                    // ৩. fromMonth এর মোট Production (In)
+                    db.get(
+                        `SELECT SUM(qty) as total FROM production 
+                         WHERE item = ? AND strftime('%Y-%m', date) = ?`,
+                        [itemName, fromMonth],
+                        (err, inRow) => {
+
+                            const totalIn = inRow && inRow.total ? inRow.total : 0;
+
+                            // ৪. fromMonth এর মোট Transfer (Out)
+                            db.get(
+                                `SELECT SUM(qty) as total FROM transfers 
+                                 WHERE item = ? AND strftime('%Y-%m', date) = ?`,
+                                [itemName, fromMonth],
+                                (err, outRow) => {
+
+                                    const totalOut = outRow && outRow.total ? outRow.total : 0;
+
+                                    const closing = Number(opening) + Number(totalIn) - Number(totalOut);
+
+                                    // ৫. এই closing কে toMonth এর opening হিসেবে বসানো
+                                    db.run(
+                                        `INSERT OR REPLACE INTO opening_stock (month, item, opening_qty, unit)
+                                         VALUES (?, ?, ?, ?)`,
+                                        [toMonth, itemName, closing, "PCS"],
+                                        function (err) {
+
+                                            completed++;
+
+                                            if (completed === items.length) {
+                                                res.json({
+                                                    message: `${fromMonth} এর Closing, ${toMonth} এর Opening হিসেবে সেভ হয়েছে`
+                                                });
+                                            }
+
+                                        }
+                                    );
+
+                                }
+                            );
+
+                        }
+                    );
+
+                }
+            );
+
+        });
+
+    });
+
+});
+router.get("/locked-months", (req, res) => {
+
+    db.all("SELECT month FROM locked_months", [], (err, rows) => {
+        if (err) return res.status(500).json(err);
+        res.json(rows.map(r => r.month));
+    });
+
+});
+
+router.post("/lock-month", (req, res) => {
+
+    const { month } = req.body;
+
+    if (!month) return res.status(400).json({ message: "মাস দিন" });
+
+    db.run(
+        "INSERT OR IGNORE INTO locked_months (month) VALUES (?)",
+        [month],
+        function (err) {
+            if (err) return res.status(500).json(err);
+            res.json({ message: `${month} Lock করা হয়েছে` });
+        }
+    );
+
+});
+
+router.post("/unlock-month", (req, res) => {
+
+    const { month } = req.body;
+
+    if (!month) return res.status(400).json({ message: "মাস দিন" });
+
+    db.run(
+        "DELETE FROM locked_months WHERE month = ?",
+        [month],
+        function (err) {
+            if (err) return res.status(500).json(err);
+            res.json({ message: `${month} Unlock করা হয়েছে` });
         }
     );
 

@@ -5,7 +5,7 @@ const router = express.Router();
 const db = require("../config/db");
 const ExcelJS = require("exceljs");
 const { requireLogin } = require("../middleware/auth.middleware");
-router.post("/save", requireLogin, (req, res) => {
+router.post("/save", (req, res) => {
 console.log(req.body);
     const { date, productionData } = req.body;
 

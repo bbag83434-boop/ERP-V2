@@ -3,88 +3,1532 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chef Bisu - User Dashboard</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1">
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <title>Chef Bisu | Dashboard</title>
+
+    <meta name="theme-color" content="#0f0f0f">
+
+    <link rel="manifest" href="manifest.json">
+
+    <link rel="icon" href="assets/logo/logo.png">
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.css">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect"
+          href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
 
     <style>
-        body { background-color: #f4f6f9; }
 
-        .menu-card {
-            text-decoration: none;
-            color: inherit;
-            display: block;
-            transition: transform 0.15s ease, box-shadow 0.15s ease;
-        }
-        .menu-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
-        }
-        .menu-card .icon {
-            font-size: 2rem;
-            color: #1e2a3a;
-        }
-    </style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+:root{
+
+--bg:#090909;
+--card:#171717;
+--card2:#1f1f1f;
+
+--gold:#D4AF37;
+--gold2:#FFD66B;
+
+--text:#ffffff;
+--muted:#9b9b9b;
+
+--border:rgba(255,255,255,.08);
+
+--radius:22px;
+
+}
+
+html{
+
+scroll-behavior:smooth;
+
+}
+
+body{
+
+background:var(--bg);
+color:var(--text);
+font-family:'Poppins',sans-serif;
+
+max-width:430px;
+margin:auto;
+
+min-height:100vh;
+
+padding-bottom:110px;
+
+overflow-x:hidden;
+
+}
+
+a{
+
+text-decoration:none;
+
+color:inherit;
+
+}
+body::before{
+content:"";
+position:fixed;
+top:-120px;
+left:-120px;
+width:260px;
+height:260px;
+background:rgba(212,175,55,.12);
+border-radius:50%;
+filter:blur(70px);
+z-index:-2;
+}
+
+body::after{
+content:"";
+position:fixed;
+right:-120px;
+bottom:-120px;
+width:260px;
+height:260px;
+background:rgba(255,255,255,.04);
+border-radius:50%;
+filter:blur(70px);
+z-index:-2;
+}
+
+.container-app{
+
+padding:18px;
+
+}
+
+.header{
+
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin-bottom:24px;
+
+}
+
+.menu-btn,
+.notify-btn{
+
+width:46px;
+height:46px;
+
+border-radius:14px;
+
+background:var(--card);
+
+border:1px solid var(--border);
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+font-size:20px;
+
+color:#fff;
+
+transition:.25s;
+
+cursor:pointer;
+
+}
+
+.menu-btn:active,
+.notify-btn:active{
+
+transform:scale(.95);
+
+}
+
+.logo{
+
+display:flex;
+align-items:center;
+gap:12px;
+
+}
+
+.logo img{
+
+width:42px;
+height:42px;
+border-radius:12px;
+
+}
+
+.logo h5{
+
+margin:0;
+font-weight:700;
+
+}
+
+.logo small{
+
+display:block;
+color:var(--muted);
+font-size:12px;
+
+}
+
+.welcome-card{
+
+background:linear-gradient(135deg,#1c1c1c,#121212);
+
+border:1px solid rgba(212,175,55,.18);
+
+border-radius:24px;
+
+padding:22px;
+
+box-shadow:0 12px 35px rgba(0,0,0,.35);
+
+margin-bottom:22px;
+
+position:relative;
+
+overflow:hidden;
+
+}
+
+.welcome-card::after{
+
+content:"";
+
+position:absolute;
+
+top:-45px;
+right:-45px;
+
+width:140px;
+height:140px;
+
+background:rgba(212,175,55,.10);
+
+border-radius:50%;
+
+}
+
+.greeting{
+
+font-size:14px;
+
+color:var(--gold);
+
+font-weight:600;
+
+margin-bottom:6px;
+
+}
+
+.user-name{
+
+font-size:24px;
+
+font-weight:700;
+
+margin-bottom:6px;
+
+}
+
+.branch{
+
+font-size:14px;
+
+color:var(--muted);
+
+margin-bottom:15px;
+
+}
+
+.user-badge{
+
+display:inline-flex;
+
+align-items:center;
+
+padding:8px 16px;
+
+border-radius:999px;
+
+background:rgba(212,175,55,.15);
+
+border:1px solid rgba(212,175,55,.35);
+
+color:var(--gold);
+
+font-size:13px;
+
+font-weight:600;
+
+}
+.summary-card{
+
+background:linear-gradient(145deg,var(--card),var(--card2));
+
+border:1px solid var(--border);
+
+border-radius:22px;
+
+padding:18px;
+
+text-align:center;
+
+transition:.30s;
+
+height:100%;
+
+}
+
+.summary-card:hover{
+
+transform:translateY(-4px);
+
+border-color:rgba(212,175,55,.35);
+
+}
+
+.summary-icon{
+
+width:52px;
+
+height:52px;
+
+border-radius:16px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+margin:auto auto 14px;
+
+font-size:22px;
+
+}
+
+.summary-card h3{
+
+font-size:28px;
+
+font-weight:700;
+
+margin-bottom:6px;
+
+color:var(--text);
+
+}
+
+.summary-card span{
+
+font-size:13px;
+
+color:var(--muted);
+
+}
+.offcanvas{
+
+background:#111111;
+
+color:#ffffff;
+
+border-right:1px solid rgba(255,255,255,.08);
+
+}
+
+.profile-box{
+
+padding:24px 20px;
+
+background:linear-gradient(135deg,#1b1b1b,#121212);
+
+border-bottom:1px solid rgba(255,255,255,.08);
+
+}
+
+.profile-avatar{
+
+width:72px;
+
+height:72px;
+
+border-radius:50%;
+
+background:linear-gradient(135deg,#D4AF37,#FFD66B);
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:30px;
+
+font-weight:700;
+
+color:#111;
+
+margin-bottom:14px;
+
+}
+
+.profile-name{
+
+font-size:20px;
+
+font-weight:700;
+
+margin-bottom:4px;
+
+}
+
+.profile-role{
+
+color:#bdbdbd;
+
+font-size:13px;
+
+margin-bottom:14px;
+
+}
+
+.online-badge{
+
+display:inline-flex;
+
+align-items:center;
+
+gap:6px;
+
+padding:6px 14px;
+
+border-radius:999px;
+
+background:rgba(40,167,69,.15);
+
+color:#55d66b;
+
+font-size:12px;
+
+font-weight:600;
+
+}
+
+.menu-list{
+
+padding:14px;
+
+}
+
+.menu-item{
+
+display:flex;
+
+align-items:center;
+
+gap:14px;
+
+padding:14px 16px;
+
+border-radius:16px;
+
+color:#ffffff;
+
+margin-bottom:8px;
+
+transition:.25s;
+
+}
+
+.menu-item:hover{
+
+background:rgba(255,255,255,.05);
+
+}
+
+.menu-item i{
+
+font-size:20px;
+
+color:var(--gold);
+
+width:24px;
+
+text-align:center;
+
+}
+
+.menu-item.logout{
+
+color:#ff6b6b;
+
+}
+
+.menu-item.logout i{
+
+color:#ff6b6b;
+
+}
+.bottom-nav{
+
+position:fixed;
+
+left:50%;
+
+bottom:16px;
+
+transform:translateX(-50%);
+
+width:calc(100% - 24px);
+
+max-width:400px;
+
+height:74px;
+
+background:rgba(18,18,18,.96);
+
+backdrop-filter:blur(18px);
+
+border:1px solid rgba(255,255,255,.08);
+
+border-radius:24px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:space-around;
+
+z-index:9999;
+
+box-shadow:0 15px 35px rgba(0,0,0,.45);
+
+}
+
+.nav-item{
+
+flex:1;
+
+height:100%;
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:center;
+
+align-items:center;
+
+background:none;
+
+border:none;
+
+color:#9f9f9f;
+
+font-size:12px;
+
+font-weight:600;
+
+transition:.25s;
+
+}
+
+.nav-item i{
+
+font-size:21px;
+
+margin-bottom:4px;
+
+}
+
+.nav-item.active{
+
+color:var(--gold);
+
+}
+
+.nav-item:active{
+
+transform:scale(.92);
+
+}
+
+.nav-menu-btn{
+
+cursor:pointer;
+
+}
+</style>
 </head>
 
 <body>
 
-    <div class="bg-white border-bottom px-3 py-2 d-flex justify-content-between align-items-center sticky-top">
-        <h1 class="h4 mb-0">Welcome</h1>
-        <div class="d-flex align-items-center gap-3">
-            <span id="userNameDisplay"><i class="bi bi-person-circle me-1"></i>User</span>
-            <button id="logoutBtn" class="btn btn-primary btn-sm">Logout</button>
+<div class="container-app">
+
+<header class="header">
+
+<button class="menu-btn"
+        data-bs-toggle="offcanvas"
+        data-bs-target="#sideMenu">
+
+<i class="bi bi-list"></i>
+
+</button>
+
+<div class="logo">
+
+<img src="assets/logo/logo.png"
+     alt="Chef Bisu">
+
+<div>
+
+<h5>Chef Bisu</h5>
+
+<small>User Dashboard</small>
+
+</div>
+
+</div>
+
+<button class="notify-btn">
+
+<i class="bi bi-bell"></i>
+
+</button>
+
+</header>
+
+<div class="welcome-card">
+
+<div class="greeting">
+Good Morning 👋
+</div>
+
+<div class="user-name">
+
+Maruf
+
+</div>
+
+<div class="branch">
+
+Central Kitchen
+
+</div>
+
+<div class="user-badge">
+
+<i class="bi bi-person-check-fill me-2"></i>
+
+Staff User
+
+</div>
+
+</div>
+<style>
+
+.section-title{
+
+display:flex;
+align-items:center;
+justify-content:space-between;
+
+margin-bottom:16px;
+
+}
+
+.section-title h6{
+
+margin:0;
+
+font-size:17px;
+
+font-weight:700;
+
+}
+
+.section-title small{
+
+color:var(--gold);
+
+font-weight:600;
+
+}
+
+.quick-grid{
+
+display:grid;
+
+grid-template-columns:repeat(2,1fr);
+
+gap:16px;
+
+margin-bottom:28px;
+
+}
+
+.quick-card{
+
+background:linear-gradient(145deg,var(--card),var(--card2));
+
+border:1px solid var(--border);
+
+border-radius:22px;
+
+padding:20px;
+
+position:relative;
+
+overflow:hidden;
+
+transition:.30s;
+
+cursor:pointer;
+
+min-height:145px;
+
+display:flex;
+
+flex-direction:column;
+
+justify-content:space-between;
+
+}
+
+.quick-card::before{
+
+content:"";
+
+position:absolute;
+
+top:-45px;
+right:-45px;
+
+width:110px;
+height:110px;
+
+background:rgba(212,175,55,.08);
+
+border-radius:50%;
+
+transition:.30s;
+
+}
+
+.quick-card:hover{
+
+transform:translateY(-4px);
+
+border-color:rgba(212,175,55,.35);
+
+}
+
+.quick-card:hover::before{
+
+transform:scale(1.15);
+
+}
+
+.quick-icon{
+
+width:56px;
+
+height:56px;
+
+border-radius:18px;
+
+background:rgba(212,175,55,.15);
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:24px;
+
+color:var(--gold);
+
+}
+
+.quick-card h6{
+
+margin:18px 0 6px;
+
+font-size:17px;
+
+font-weight:700;
+
+}
+
+.quick-card p{
+
+margin:0;
+
+font-size:13px;
+
+color:var(--muted);
+
+line-height:1.5;
+
+}
+
+.card-arrow{
+
+position:absolute;
+
+right:18px;
+
+bottom:18px;
+
+font-size:18px;
+
+color:var(--gold);
+
+}
+.timeline-card{
+
+background:linear-gradient(145deg,var(--card),var(--card2));
+
+border:1px solid var(--border);
+
+border-radius:22px;
+
+padding:20px;
+
+margin-bottom:25px;
+
+}
+
+.timeline-item{
+
+display:flex;
+
+align-items:flex-start;
+
+gap:14px;
+
+padding:14px 0;
+
+border-bottom:1px solid rgba(255,255,255,.06);
+
+}
+
+.timeline-item:last-child{
+
+border-bottom:none;
+
+padding-bottom:0;
+
+}
+
+.timeline-icon{
+
+width:46px;
+
+height:46px;
+
+border-radius:15px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+flex-shrink:0;
+
+background:rgba(212,175,55,.12);
+
+color:var(--gold);
+
+font-size:20px;
+
+}
+
+.timeline-content{
+
+flex:1;
+
+}
+
+.timeline-content h6{
+
+margin:0;
+
+font-size:15px;
+
+font-weight:600;
+
+}
+
+.timeline-content small{
+
+display:block;
+
+margin-top:3px;
+
+color:var(--muted);
+
+font-size:12px;
+
+}
+
+.timeline-time{
+
+font-size:11px;
+
+color:var(--gold);
+
+font-weight:600;
+
+white-space:nowrap;
+
+}
+</style>
+<div class="section-title">
+
+<h6>Quick Actions</h6>
+
+<small>4 Modules</small>
+
+</div>
+
+<div class="quick-grid">
+
+<a href="production.html" class="quick-card">
+
+<div class="quick-icon">
+<i class="bi bi-box-seam"></i>
+</div>
+
+<div>
+
+<h6>Production</h6>
+
+<p>Add production, history and search.</p>
+
+</div>
+
+<div class="card-arrow">
+
+<i class="bi bi-arrow-right-circle-fill"></i>
+
+</div>
+
+</a>
+
+<a href="transfer.html" class="quick-card">
+
+<div class="quick-icon">
+<i class="bi bi-arrow-left-right"></i>
+</div>
+
+<div>
+
+<h6>Transfer</h6>
+
+<p>Transfer items between branches.</p>
+
+</div>
+
+<div class="card-arrow">
+
+<i class="bi bi-arrow-right-circle-fill"></i>
+
+</div>
+
+</a>
+<a href="stock.html" class="quick-card">
+
+<div class="quick-icon">
+<i class="bi bi-boxes"></i>
+</div>
+
+<div>
+
+<h6>Stock</h6>
+
+<p>Current stock, history and search.</p>
+
+</div>
+
+<div class="card-arrow">
+
+<i class="bi bi-arrow-right-circle-fill"></i>
+
+</div>
+
+</a>
+
+<a href="wastage.html" class="quick-card">
+
+<div class="quick-icon">
+<i class="bi bi-trash3"></i>
+</div>
+
+<div>
+
+<h6>Wastage</h6>
+
+<p>Record wastage and review history.</p>
+
+</div>
+
+<div class="card-arrow">
+
+<i class="bi bi-arrow-right-circle-fill"></i>
+
+</div>
+
+</a>
+
+</div>
+<!-- ==========================
+     TODAY'S ACTIVITY
+========================== -->
+
+<div class="section-title">
+
+    <h6>Today's Activity</h6>
+
+    <small>Live Summary</small>
+
+</div>
+
+<div class="row g-3 mb-4">
+
+    <!-- Production -->
+
+    <div class="col-6">
+
+        <div class="summary-card">
+
+            <div class="summary-icon bg-warning-subtle text-warning">
+
+                <i class="bi bi-box-seam-fill"></i>
+
+            </div>
+
+            <h3 id="todayProduction">0</h3>
+
+            <span>Production</span>
+
         </div>
+
     </div>
 
-    <div class="container py-4" style="max-width: 700px;">
+    <!-- Transfer -->
 
-        <div class="row g-3">
+    <div class="col-6">
 
-            <div class="col-6">
-                <a href="production.html" class="card menu-card h-100">
-                    <div class="card-body text-center py-4">
-                        <div class="icon mb-2"><i class="bi bi-building"></i></div>
-                        <div>Production Entry</div>
-                    </div>
-                </a>
+        <div class="summary-card">
+
+            <div class="summary-icon bg-primary-subtle text-primary">
+
+                <i class="bi bi-arrow-left-right"></i>
+
             </div>
 
-            <div class="col-6">
-                <a href="production-history.html" class="card menu-card h-100">
-                    <div class="card-body text-center py-4">
-                        <div class="icon mb-2"><i class="bi bi-clipboard-data"></i></div>
-                        <div>Production History</div>
-                    </div>
-                </a>
-            </div>
+            <h3 id="todayTransfer">0</h3>
 
-            <div class="col-6">
-                <a href="transfer.html" class="card menu-card h-100">
-                    <div class="card-body text-center py-4">
-                        <div class="icon mb-2"><i class="bi bi-truck"></i></div>
-                        <div>Transfer Entry</div>
-                    </div>
-                </a>
-            </div>
-
-            <div class="col-6">
-                <a href="transfer-history.html" class="card menu-card h-100">
-                    <div class="card-body text-center py-4">
-                        <div class="icon mb-2"><i class="bi bi-clipboard-data"></i></div>
-                        <div>Transfer History</div>
-                    </div>
-                </a>
-            </div>
+            <span>Transfer</span>
 
         </div>
 
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
-    <script src="../js/user-dashboard.js"></script>
+    <!-- Stock -->
+
+    <div class="col-6">
+
+        <div class="summary-card">
+
+            <div class="summary-icon bg-success-subtle text-success">
+
+                <i class="bi bi-boxes"></i>
+
+            </div>
+
+            <h3 id="stockItems">0</h3>
+
+            <span>Stock Items</span>
+
+        </div>
+
+    </div>
+
+    <!-- Wastage -->
+
+    <div class="col-6">
+
+        <div class="summary-card">
+
+            <div class="summary-icon bg-danger-subtle text-danger">
+
+                <i class="bi bi-trash3-fill"></i>
+
+            </div>
+
+            <h3 id="todayWaste">0</h3>
+
+            <span>Wastage</span>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- ==========================
+     RECENT ACTIVITY
+========================== -->
+
+<div class="section-title">
+
+<h6>Recent Activity</h6>
+
+<small>Latest Updates</small>
+
+</div>
+
+<div class="timeline-card">
+
+<div id="recentActivity">
+
+<div class="timeline-item">
+
+<div class="timeline-icon">
+
+<i class="bi bi-box-seam"></i>
+
+</div>
+
+<div class="timeline-content">
+
+<h6>Production Added</h6>
+
+<small>Milk Sweet • Qty 120 Kg</small>
+
+</div>
+
+<div class="timeline-time">
+
+09:30 AM
+
+</div>
+
+</div>
+
+<div class="timeline-item">
+
+<div class="timeline-icon">
+
+<i class="bi bi-arrow-left-right"></i>
+
+</div>
+
+<div class="timeline-content">
+
+<h6>Transfer Completed</h6>
+
+<small>Main Store → Branch 2</small>
+
+</div>
+
+<div class="timeline-time">
+
+10:15 AM
+
+</div>
+
+</div>
+
+<div class="timeline-item">
+
+<div class="timeline-icon">
+
+<i class="bi bi-boxes"></i>
+
+</div>
+
+<div class="timeline-content">
+
+<h6>Stock Updated</h6>
+
+<small>Closing Stock Saved</small>
+
+</div>
+
+<div class="timeline-time">
+
+11:20 AM
+
+</div>
+
+</div>
+
+<div class="timeline-item">
+
+<div class="timeline-icon">
+
+<i class="bi bi-trash3"></i>
+
+</div>
+
+<div class="timeline-content">
+
+<h6>Wastage Recorded</h6>
+
+<small>Expired Item • Qty 3 Kg</small>
+
+</div>
+
+<div class="timeline-time">
+
+12:05 PM
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+<!-- ===========================
+     PREMIUM SIDEBAR MENU
+=========================== -->
+
+<div class="offcanvas offcanvas-start"
+     tabindex="-1"
+     id="sideMenu">
+
+<div class="profile-box">
+
+<div class="profile-avatar">
+
+M
+
+</div>
+
+<div class="profile-name">
+
+Maruf
+
+</div>
+
+<div class="profile-role">
+
+Staff User • Central Kitchen
+
+</div>
+
+<div class="online-badge">
+
+<i class="bi bi-circle-fill"></i>
+
+Online
+
+</div>
+
+</div>
+
+<div class="menu-list">
+
+<a href="recipes.html" class="menu-item">
+
+<i class="bi bi-journal-richtext"></i>
+
+<span>Recipes</span>
+
+</a>
+
+<a href="history.html" class="menu-item">
+
+<i class="bi bi-clock-history"></i>
+
+<span>My History</span>
+
+</a>
+
+<a href="search.html" class="menu-item">
+
+<i class="bi bi-search"></i>
+
+<span>Search</span>
+
+</a>
+
+<a href="profile.html" class="menu-item">
+
+<i class="bi bi-person-circle"></i>
+
+<span>My Profile</span>
+
+</a>
+
+<a href="change-password.html" class="menu-item">
+
+<i class="bi bi-shield-lock"></i>
+
+<span>Change Password</span>
+
+</a>
+
+<a href="notifications.html" class="menu-item">
+
+<i class="bi bi-bell"></i>
+
+<span>Notifications</span>
+
+</a>
+<a href="feedback.html" class="menu-item">
+
+    <i class="bi bi-chat-dots"></i>
+
+    <span>Feedback</span>
+
+</a>
+
+<a href="help.html" class="menu-item">
+
+    <i class="bi bi-question-circle"></i>
+
+    <span>Help Center</span>
+
+</a>
+
+<a href="app-info.html" class="menu-item">
+
+    <i class="bi bi-phone"></i>
+
+    <span>App Info</span>
+
+</a>
+
+<a href="language.html" class="menu-item">
+
+    <i class="bi bi-translate"></i>
+
+    <span>Language</span>
+
+</a>
+
+<a href="offline.html" class="menu-item">
+
+    <i class="bi bi-cloud-arrow-down"></i>
+
+    <span>Offline Data</span>
+
+</a>
+
+<a href="performance.html" class="menu-item">
+
+    <i class="bi bi-graph-up-arrow"></i>
+
+    <span>My Performance</span>
+
+</a>
+
+<hr class="border-secondary my-3">
+
+<a href="logout.html" class="menu-item logout">
+
+    <i class="bi bi-box-arrow-right"></i>
+
+    <span>Logout</span>
+
+</a>
+
+</div>
+
+</div>
+
+<!-- ===========================
+     FLOATING BOTTOM NAVIGATION
+=========================== -->
+
+<nav class="bottom-nav">
+
+    <a href="user-dashboard-new.html"
+       class="nav-item active">
+
+        <i class="bi bi-house-door-fill"></i>
+
+        <span>Home</span>
+
+    </a>
+
+    <a href="production.html"
+       class="nav-item">
+
+        <i class="bi bi-box-seam-fill"></i>
+
+        <span>Production</span>
+
+    </a>
+
+    <a href="transfer.html"
+       class="nav-item">
+
+        <i class="bi bi-arrow-left-right"></i>
+
+        <span>Transfer</span>
+
+    </a>
+
+    <button class="nav-item nav-menu-btn"
+            data-bs-toggle="offcanvas"
+            data-bs-target="#sideMenu">
+
+        <i class="bi bi-grid-fill"></i>
+
+        <span>Menu</span>
+
+    </button>
+
+</nav>
+<!-- Bootstrap Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+
+/* ==========================
+   AUTO GREETING
+========================== */
+
+(function () {
+
+    const greeting = document.querySelector(".greeting");
+
+    if (!greeting) return;
+
+    const hour = new Date().getHours();
+
+    if (hour < 12) {
+
+        greeting.textContent = "🌅 Good Morning";
+
+    } else if (hour < 17) {
+
+        greeting.textContent = "☀️ Good Afternoon";
+
+    } else {
+
+        greeting.textContent = "🌙 Good Evening";
+
+    }
+
+})();
+
+/* ==========================
+   RIPPLE EFFECT
+========================== */
+
+document.querySelectorAll(".quick-card,.menu-item,.nav-item,.menu-btn,.notify-btn")
+.forEach(item=>{
+
+item.addEventListener("click",function(e){
+
+const ripple=document.createElement("span");
+
+const rect=this.getBoundingClientRect();
+
+const size=Math.max(rect.width,rect.height);
+
+ripple.style.width=size+"px";
+ripple.style.height=size+"px";
+
+ripple.style.left=(e.clientX-rect.left-size/2)+"px";
+ripple.style.top=(e.clientY-rect.top-size/2)+"px";
+
+ripple.style.position="absolute";
+ripple.style.borderRadius="50%";
+ripple.style.background="rgba(255,255,255,.20)";
+ripple.style.transform="scale(0)";
+ripple.style.pointerEvents="none";
+ripple.style.animation="ripple .6s linear";
+
+this.style.position="relative";
+this.style.overflow="hidden";
+
+this.appendChild(ripple);
+
+setTimeout(()=>{
+
+ripple.remove();
+
+},600);
+
+});
+
+});
+
+
+/* ==========================
+   CARD ENTRANCE ANIMATION
+========================== */
+
+document.querySelectorAll(".quick-card,.summary-card,.timeline-card")
+.forEach((card,index)=>{
+
+card.style.opacity="0";
+
+card.style.transform="translateY(20px)";
+
+setTimeout(()=>{
+
+card.style.transition=".45s ease";
+
+card.style.opacity="1";
+
+card.style.transform="translateY(0)";
+
+},120*index);
+
+});
+
+</script>
+
+<style>
+
+@keyframes ripple{
+
+to{
+
+transform:scale(4);
+
+opacity:0;
+
+}
+
+}
+
+</style>
 
 </body>
+
 </html>

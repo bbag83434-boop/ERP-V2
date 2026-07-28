@@ -291,4 +291,24 @@ CREATE TABLE IF NOT EXISTS locked_months (
     month TEXT UNIQUE NOT NULL
 )
 `);
+db.run(`
+CREATE TABLE IF NOT EXISTS minimum_stock (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    item TEXT NOT NULL,
+    minimum_qty REAL NOT NULL,
+    unit TEXT NOT NULL,
+    UNIQUE(item, unit)
+)
+`);
+db.run(`
+CREATE TABLE IF NOT EXISTS wastage (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    date TEXT NOT NULL,
+    item TEXT NOT NULL,
+    qty REAL NOT NULL,
+    unit TEXT NOT NULL,
+    reason TEXT NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+)
+`);
 });

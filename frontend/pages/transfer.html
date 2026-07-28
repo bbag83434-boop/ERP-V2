@@ -1,133 +1,568 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transfer</title>
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-    <style>
-        body { background-color: #f4f6f9; }
+<title>Chef Bisu | Transfer</title>
 
-        #sidebarOffcanvas {
-            min-height: 100vh;
-            background-color: #1e2a3a;
-            color: #fff;
-        }
-        #sidebarOffcanvas .brand {
-            padding: 1.25rem 1rem;
-            font-size: 1.4rem;
-            font-weight: 700;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        #sidebarOffcanvas .nav-link {
-            color: #c9d2dc;
-            padding: 0.65rem 1rem;
-            border-radius: 0.375rem;
-            margin: 0.15rem 0.5rem;
-        }
-        #sidebarOffcanvas .nav-link:hover,
-        #sidebarOffcanvas .nav-link.active {
-            background-color: #2c3e50;
-            color: #fff;
-        }
-        .table-responsive table { margin-bottom: 0; }
-    </style>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="../css/loading.css">
+
+<style>
+
+:root{
+    --bg:#0c0c0e;
+    --card:#17171b;
+    --gold:#d4a437;
+    --text:#ffffff;
+    --border:rgba(255,255,255,.08);
+}
+
+body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:Inter,sans-serif;
+    max-width:430px;
+    margin:auto;
+    padding-bottom:90px;
+}
+
+.logo{
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    object-fit:contain;
+}
+
+.btn-dark{
+    background:#17171b;
+    border:1px solid var(--border);
+}
+
+.date-card{
+    width:100%;
+    background:#17171b;
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:14px 18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    color:#fff;
+    font-weight:600;
+}
+
+.date-card i:first-child{
+    color:var(--gold);
+}
+
+.card{
+    background:#17171b;
+    border:1px solid var(--border);
+    border-radius:18px;
+}
+
+.form-control,
+.form-select{
+    background:#0f0f12;
+    color:#fff;
+    border:1px solid var(--border);
+}
+
+.form-control:focus,
+.form-select:focus{
+    background:#0f0f12;
+    color:#fff;
+    border-color:var(--gold);
+    box-shadow:none;
+}
+
+.form-label{
+    color:#b5b5b5;
+    font-size:14px;
+}
+
+/* Tabs (New Transfer / History) */
+.tab-switch{
+    display:flex; background:#17171b; border:1px solid var(--border);
+    border-radius:14px; padding:5px; gap:5px;
+}
+.tab-switch button{
+    flex:1; border:none; background:transparent; color:#b5b5b5;
+    font-weight:600; font-size:14px; padding:10px 0; border-radius:10px;
+}
+.tab-switch button.active{ background:var(--gold); color:#111; }
+.tab-pane{ display:none; }
+.tab-pane.active{ display:block; }
+
+/* History list */
+.history-card{
+    background:#17171b; border:1px solid var(--border);
+    border-radius:16px; padding:14px 16px; margin-bottom:10px;
+}
+.history-card .h-top{
+    display:flex; justify-content:space-between; align-items:center;
+}
+.history-card h6{ margin:0; font-weight:700; font-size:14px; }
+.history-card small{ color:#9a9a9f; }
+.history-card .h-date{ font-size:11px; color:#7d7d82; }
+.history-card .h-items{
+    margin-top:10px; padding-top:10px; border-top:1px solid var(--border);
+    display:flex; flex-wrap:wrap; gap:6px;
+}
+.h-chip{
+    background:#0f0f12; border-radius:20px; padding:4px 12px;
+    font-size:11.5px; color:#cfcfcf;
+}
+.filter-row{ display:flex; gap:8px; overflow-x:auto; padding-bottom:2px; }
+.filter-row::-webkit-scrollbar{ display:none; }
+.chip{
+    flex:0 0 auto; background:#17171b; border:1px solid var(--border);
+    color:#b5b5b5; font-size:12.5px; font-weight:600;
+    padding:8px 16px; border-radius:20px; white-space:nowrap;
+}
+.chip.active{ background:var(--gold); color:#111; border-color:var(--gold); }
+
+#emptyState{
+    min-height:140px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
+#emptyHistory{
+    min-height:140px;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
+
+#saveBtn{
+    position:sticky;
+    bottom:15px;
+    z-index:100;
+}
+
+#transferList{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.transfer-item{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    background:#17171b;
+    border:1px solid rgba(255,255,255,.08);
+    border-radius:16px;
+    padding:16px;
+    color:#fff;
+}
+
+.transfer-item h6{
+    margin:0;
+    color:#fff;
+    font-weight:600;
+}
+
+.transfer-item small{
+    color:#bdbdbd;
+}
+
+.transfer-item .qty{
+    color:#f6c453;
+    font-weight:700;
+}
+
+.delete-btn{
+    width:38px;
+    height:38px;
+    border:none;
+    border-radius:10px;
+    background:#ff4d4f;
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+}
+
+</style>
+
 </head>
 
 <body>
 
-<div class="d-flex">
+<div class="d-flex justify-content-between align-items-center px-3 pt-3">
 
-    <!-- Sidebar -->
-    <nav id="sidebarOffcanvas" class="offcanvas-md offcanvas-start" tabindex="-1">
-        <div class="brand d-flex justify-content-between align-items-center">
-            <span>Chef Bisu</span>
-            <button type="button" class="btn-close btn-close-white d-md-none" data-bs-dismiss="offcanvas" data-bs-target="#sidebarOffcanvas"></button>
+<button id="backBtn" class="btn btn-dark rounded-4">
+<i class="bi bi-arrow-left"></i>
+</button>
+
+<div class="d-flex align-items-center">
+
+<img src="../assets/chef-bisu-logo.png" class="logo">
+
+<div class="ms-2">
+
+<div class="fw-bold">
+Chef <span style="color:#d4a437;">Bisu</span>
+</div>
+
+<small class="text-secondary">
+Transfer
+</small>
+
+</div>
+
+</div>
+
+<button class="btn btn-dark rounded-4">
+<i class="bi bi-arrow-left-right"></i>
+</button>
+
+</div>
+
+<!-- Tabs -->
+<div class="px-3 mt-3">
+    <div class="tab-switch">
+        <button id="newTabBtn" class="active">New</button>
+        <button id="historyTabBtn">History</button>
+        <button id="searchTabBtn">Search</button>
+    </div>
+</div>
+
+<!-- ============ TAB 1: New Transfer ============ -->
+<div id="newPane" class="tab-pane active">
+
+<div class="px-3 mt-3">
+
+<button class="date-card">
+
+<i class="bi bi-calendar3"></i>
+
+<span id="transferDateText"></span>
+
+<i class="bi bi-chevron-down"></i>
+
+</button>
+
+<input type="date" id="transferDate" hidden>
+
+</div>
+
+<div class="container mt-4">
+
+<div class="card">
+
+<div class="card-body">
+
+<h5 class="mb-4">
+Add Transfer
+</h5>
+
+<!-- Outlet -->
+<div class="mb-3">
+
+    <label class="form-label">
+        Outlet
+    </label>
+
+    <select
+        id="outlet"
+        class="form-select">
+
+        <option value="">
+            Select Outlet
+        </option>
+
+    </select>
+
+</div>
+
+<!-- Item -->
+<div class="mb-3">
+
+    <label class="form-label">
+        Item
+    </label>
+
+    <select
+        id="item"
+        class="form-select">
+
+        <option value="">
+            Select Item
+        </option>
+
+    </select>
+
+</div>
+
+<div class="row">
+
+    <div class="col-6">
+
+        <label class="form-label">
+            Quantity
+        </label>
+
+        <input
+            type="number"
+            id="qty"
+            class="form-control"
+            min="1"
+            placeholder="Enter Qty">
+
+    </div>
+
+    <div class="col-6">
+
+        <label class="form-label">
+            Unit
+        </label>
+
+        <select
+            id="unit"
+            class="form-select">
+
+            <option value="PCS">PCS</option>
+            <option value="KG">KG</option>
+
+        </select>
+
+    </div>
+
+</div>
+
+<div class="mt-4">
+
+    <button
+        id="addRowBtn"
+        class="btn btn-warning w-100 fw-bold rounded-3">
+
+        <i class="bi bi-plus-circle me-2"></i>
+
+        Add Row
+
+    </button>
+
+</div>
+
+</div>
+</div>
+
+<div class="mt-4">
+
+    <h6 class="text-white mb-3">
+        Transfer List
+    </h6>
+
+    <div id="transferList">
+
+        <div id="emptyState" class="text-center py-4 rounded-4 border border-secondary">
+
+            <i class="bi bi-inbox fs-1 text-secondary"></i>
+
+            <p class="text-secondary mt-3 mb-0">
+                No transfer item added
+            </p>
+
         </div>
-        <ul class="nav flex-column py-2">
-            <li class="nav-item"><a class="nav-link" href="dashboard.html"><i class="bi bi-house-door me-2"></i>Dashboard</a></li>
-            <li class="nav-item"><a class="nav-link" href="production.html"><i class="bi bi-building me-2"></i>Production</a></li>
-            <li class="nav-item"><a class="nav-link" href="production-history.html"><i class="bi bi-clipboard-data me-2"></i>Production History</a></li>
-            <li class="nav-item"><a class="nav-link active" href="transfer.html"><i class="bi bi-truck me-2"></i>Transfer</a></li>
-            <li class="nav-item"><a class="nav-link" href="transfer-history.html"><i class="bi bi-clipboard-data me-2"></i>Transfer History</a></li>
-            <li class="nav-item"><a class="nav-link" href="stock.html"><i class="bi bi-box-seam me-2"></i>Stock</a></li>
-            <li class="nav-item"><a class="nav-link" href="reports.html"><i class="bi bi-bar-chart me-2"></i>Reports</a></li>
-            <li class="nav-item"><a class="nav-link" href="users.html"><i class="bi bi-people me-2"></i>Users</a></li>
-            <li class="nav-item"><a class="nav-link" href="settings.html"><i class="bi bi-gear me-2"></i>Settings</a></li>
-        </ul>
-    </nav>
 
-    <!-- Main content -->
-    <div class="flex-grow-1">
+    </div>
 
-        <div class="bg-white border-bottom px-3 py-2 d-flex justify-content-between align-items-center sticky-top">
-            <div class="d-flex align-items-center gap-2">
-                <button class="btn btn-outline-secondary d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas">
-                    <i class="bi bi-list"></i>
-                </button>
-                <h1 class="h4 mb-0">Transfer Entry</h1>
-            </div>
-            <div class="d-flex align-items-center gap-3">
-                <span><i class="bi bi-person-circle me-1"></i>Admin</span>
-                <button id="logoutBtn" class="btn btn-primary btn-sm">Logout</button>
-            </div>
+    <button
+        id="saveBtn"
+        class="btn btn-warning w-100 fw-bold rounded-3 mt-4">
+
+        <i class="bi bi-save me-2"></i>
+
+        Save Transfer
+
+    </button>
+
+</div>
+
+</div>
+
+</div>
+<!-- end #newPane -->
+
+<!-- ============ TAB 2: History ============ -->
+<div id="historyPane" class="tab-pane px-3 mt-3">
+
+    <div id="historyFilterRow" class="filter-row mb-3">
+        <button class="chip active" data-branch="">All Outlets</button>
+    </div>
+
+    <div id="historyList">
+
+        <div id="emptyHistory" class="text-center py-4 rounded-4 border border-secondary" style="display:none;">
+            <i class="bi bi-clock-history fs-1 text-secondary"></i>
+            <p class="text-secondary mt-3 mb-0">No transfer history found</p>
         </div>
 
-        <div class="p-3">
+    </div>
 
-            <div class="card shadow-sm">
-                <div class="card-body">
+</div>
+<!-- end #historyPane -->
 
-                    <div class="row g-2 mb-3">
-                        <div class="col-12 col-md-4 col-lg-3">
-                            <label class="form-label">Transfer Date</label>
-                            <input type="date" id="transferDate" class="form-control">
-                        </div>
-                        <div class="col-12 col-md-4 col-lg-3">
-                            <label class="form-label">Branch</label>
-                            <select id="branch" class="form-select">
-                                <option value="">Select Branch</option>
-                            </select>
-                        </div>
-                    </div>
+<!-- ============ TAB 3: Search ============ -->
+<div id="searchPane" class="tab-pane px-3 mt-3">
 
-                    <div class="table-responsive mb-3">
-                        <table id="transferTable" class="table table-bordered table-sm align-middle">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>#</th>
-                                    <th>Item</th>
-                                    <th>Quantity</th>
-                                    <th>Unit</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="transferRows"></tbody>
-                        </table>
-                    </div>
+    <div class="card mb-3">
+        <div class="card-body">
 
-                    <div class="d-flex flex-wrap gap-2">
-                        <button type="button" id="addRowBtn" class="btn btn-outline-primary">
-                            <i class="bi bi-plus-lg me-1"></i>Add Row
-                        </button>
-                        <button type="button" id="saveBtn" class="btn btn-primary">
-                            <i class="bi bi-save me-1"></i>Save Transfer
-                        </button>
-                    </div>
+            <h5 class="mb-3">Search Transfer</h5>
 
+            <div class="row g-2 mb-3">
+                <div class="col-6">
+                    <label class="form-label">From</label>
+                    <input type="date" id="searchFrom" class="form-control">
+                </div>
+                <div class="col-6">
+                    <label class="form-label">To</label>
+                    <input type="date" id="searchTo" class="form-control">
                 </div>
             </div>
 
+            <div class="mb-3">
+                <label class="form-label">Branch</label>
+                <select id="searchBranch" class="form-select">
+                    <option value="">All Branches</option>
+                </select>
+            </div>
+
+            <button id="searchBtn" class="btn btn-warning w-100 fw-bold rounded-3">
+                <i class="bi bi-search me-2"></i>
+                Search
+            </button>
+
+        </div>
+    </div>
+
+    <div id="searchResultList">
+
+        <div id="emptySearch" class="text-center py-4 rounded-4 border border-secondary" style="display:none;">
+            <i class="bi bi-search fs-1 text-secondary"></i>
+            <p class="text-secondary mt-3 mb-0">No results found</p>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="loading-overlay">
+
+    <div class="loading-box">
+
+        <div class="loader"></div>
+
+        <h5 id="loadingTitle">
+            Saving Transfer...
+        </h5>
+
+        <p id="loadingText">
+            Please wait...
+        </p>
+
+    </div>
+
+</div>
+
+<!-- Success Overlay -->
+<div id="successOverlay" class="loading-overlay">
+
+    <div class="loading-box">
+
+        <div class="success-circle">
+
+            <i class="bi bi-check-lg"></i>
+
+        </div>
+
+        <h5>
+            Transfer Saved
+        </h5>
+
+        <p>
+            Successfully
+        </p>
+
+    </div>
+
+</div>
+
+<!-- Edit Transfer Modal -->
+<div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background:#17171b; border:1px solid rgba(255,255,255,.08); border-radius:18px; color:#fff;">
+            <div class="modal-body p-4">
+
+                <h5 class="mb-3">Edit Transfer</h5>
+                <input type="hidden" id="editId">
+
+                <div class="mb-3">
+                    <label class="form-label">Branch</label>
+                    <select id="editBranch" class="form-select"></select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Item</label>
+                    <select id="editItem" class="form-select"></select>
+                </div>
+
+                <div class="row g-2 mb-3">
+                    <div class="col-6">
+                        <label class="form-label">Quantity</label>
+                        <input type="number" id="editQty" class="form-control" min="1">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">Unit</label>
+                        <select id="editUnit" class="form-select">
+                            <option value="PCS">PCS</option>
+                            <option value="KG">KG</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button class="btn btn-secondary w-50 rounded-3" data-bs-dismiss="modal">Cancel</button>
+                    <button id="editSaveBtn" class="btn btn-warning w-50 fw-bold rounded-3">Update</button>
+                </div>
+
+            </div>
         </div>
     </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
-<script src="../js/auth.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="../js/loading.js"></script>
+<script>
+    // Tab switcher (New / History / Search)
+    const tabButtons = {
+        newTabBtn: document.getElementById("newPane"),
+        historyTabBtn: document.getElementById("historyPane"),
+        searchTabBtn: document.getElementById("searchPane")
+    };
+
+    Object.keys(tabButtons).forEach(btnId => {
+        document.getElementById(btnId).addEventListener("click", () => {
+            Object.keys(tabButtons).forEach(innerId => {
+                document.getElementById(innerId).classList.toggle("active", innerId === btnId);
+                tabButtons[innerId].classList.toggle("active", innerId === btnId);
+            });
+        });
+    });
+</script>
 <script src="../js/transfer.js"></script>
 
 </body>

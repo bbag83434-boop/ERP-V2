@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chef Bisu | User Dashboard</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0c0c0e;
+    --card:#17171b;
+    --card-2:#1e1e23;
+    --gold:#d4a437;
+    --gold-soft:rgba(212,164,55,.14);
+    --text:#f5f5f4;
+    --text-dim:#9a9a9f;
+    --border:rgba(255,255,255,.06);
+    --danger:#e5544d;
+    --warn:#e5a33d;
+    --ok:#3fbf6f;
+  }
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter',sans-serif;
+    max-width:430px;
+    margin:0 auto;
+    min-height:100vh;
+    padding-bottom:90px;
+  }
+  h1,h2,h3,h4,.brand,.greet{font-family:'Poppins',sans-serif;}
+
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 18px 6px;
+  }
+  .icon-btn{
+    width:40px;height:40px;border-radius:12px;
+    background:var(--card);border:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--text);font-size:18px;position:relative;
+  }
+  .badge-dot{
+    position:absolute;top:-4px;right:-4px;
+    background:var(--gold);color:#111;
+    font-size:10px;font-weight:700;
+    width:17px;height:17px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;}
+  .brand img{width:34px;height:34px;border-radius:10px;object-fit:contain;}
+  .brand small{display:block;color:var(--gold);font-weight:800;font-size:15px;letter-spacing:1px;}
+
+  .greet-wrap{padding:14px 18px 4px;}
+  .greet{font-size:20px;font-weight:600;margin:0;}
+  .sub{color:var(--text-dim);font-size:13px;margin-top:2px;}
+  .role-pill{
+    display:inline-block;margin-top:8px;font-size:11px;font-weight:700;
+    color:var(--gold);background:var(--gold-soft);
+    padding:3px 10px;border-radius:20px;
+  }
+
+  .sec-title{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px 18px 10px;
+  }
+  .sec-title h6{margin:0;font-size:14px;font-weight:700;color:var(--text);}
+  .sec-title a{font-size:12px;color:var(--gold);text-decoration:none;font-weight:600;}
+
+  .quick-grid{
+    display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 18px;
+  }
+  .quick-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:16px;
+    text-decoration:none;
+    color:var(--text);
+    transition:transform .15s ease, background .15s ease;
+  }
+  .quick-card:active{transform:scale(.96);background:var(--card-2);}
+  .quick-card .qi{
+    width:42px;height:42px;border-radius:12px;
+    background:var(--gold-soft);color:var(--gold);
+    display:flex;align-items:center;justify-content:center;font-size:20px;
+    margin-bottom:14px;
+  }
+  .quick-card h6{margin:0;font-size:14.5px;font-weight:600;}
+  .quick-card p{margin:2px 0 0;font-size:11.5px;color:var(--text-dim);}
+
+  .summary-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 18px;
+  }
+  .summary-card{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:14px;padding:12px 6px;text-align:center;
+  }
+  .summary-card .num{font-size:19px;font-weight:800;font-family:'Poppins',sans-serif;}
+  .summary-card .lbl{font-size:10px;color:var(--text-dim);margin-top:2px;}
+  .num.gold{color:var(--gold);}
+  .num.warn{color:var(--warn);}
+  .num.ok{color:var(--ok);}
+
+  .task-list{padding:0 18px;display:flex;flex-direction:column;gap:10px;}
+  .task-item{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:14px;padding:12px 14px;
+    display:flex;align-items:center;gap:12px;
+  }
+  .task-ico{
+    width:36px;height:36px;border-radius:10px;flex:0 0 36px;
+    display:flex;align-items:center;justify-content:center;font-size:16px;
+    background:var(--gold-soft);color:var(--gold);
+  }
+  .task-txt h6{margin:0;font-size:13px;font-weight:600;}
+  .task-txt p{margin:0;font-size:11.5px;color:var(--text-dim);}
+  .task-time{margin-left:auto;font-size:10.5px;color:var(--text-dim);white-space:nowrap;}
+
+  #emptyTasks{
+    text-align:center;padding:24px 18px;color:var(--text-dim);font-size:12.5px;
+  }
+
+  .bottom-nav{
+    position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+    max-width:430px;width:100%;
+    background:rgba(12,12,14,.92);backdrop-filter:blur(14px);
+    border-top:1px solid var(--border);
+    display:flex;
+    padding:10px 10px calc(10px + env(safe-area-inset-bottom));
+  }
+  .nav-item{
+    flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
+    color:var(--text-dim);text-decoration:none;font-size:10.5px;font-weight:600;
+  }
+  .nav-item i{font-size:19px;}
+  .nav-item.active{color:var(--gold);}
+</style>
+</head>
+<body>
+
+  <!-- Top bar -->
+  <div class="topbar">
+    <button class="icon-btn"><i class="bi bi-list"></i></button>
+    <div class="brand">
+      <img src="../assets/chef-bisu-logo.png">
+    </div>
+    <button class="icon-btn">
+      <i class="bi bi-bell"></i>
+      <span class="badge-dot">2</span>
+    </button>
+  </div>
+
+  <!-- Greeting -->
+  <div class="greet-wrap">
+    <h1 class="greet">Good Morning, Rahim 👋</h1>
+    <p class="sub">Central Kitchen</p>
+    <span class="role-pill"><i class="bi bi-person-fill me-1"></i>Staff User</span>
+  </div>
+
+  <!-- Quick Actions (limited to daily entry tasks) -->
+  <div class="sec-title"><h6>Quick Actions</h6></div>
+  <div class="quick-grid">
+    <a href="production-new.html" class="quick-card">
+      <div class="qi"><i class="bi bi-building"></i></div>
+      <h6>Production</h6>
+      <p>Add production</p>
+    </a>
+    <a href="stock-new.html" class="quick-card">
+      <div class="qi"><i class="bi bi-box-seam"></i></div>
+      <h6>Stock</h6>
+      <p>View stock</p>
+    </a>
+    <a href="transfer-new.html" class="quick-card">
+      <div class="qi"><i class="bi bi-arrow-left-right"></i></div>
+      <h6>Transfer</h6>
+      <p>Send / Receive</p>
+    </a>
+    <a href="purchase-new.html" class="quick-card">
+      <div class="qi"><i class="bi bi-cart3"></i></div>
+      <h6>Purchase</h6>
+      <p>Add purchase</p>
+    </a>
+  </div>
+
+  <!-- My Today's Summary -->
+  <div class="sec-title"><h6>My Today's Entries</h6></div>
+  <div class="summary-grid">
+    <div class="summary-card"><div class="num gold">4</div><div class="lbl">Production</div></div>
+    <div class="summary-card"><div class="num ok">2</div><div class="lbl">Transfer</div></div>
+    <div class="summary-card"><div class="num warn">1</div><div class="lbl">Purchase</div></div>
+  </div>
+
+  <!-- My Recent Activity -->
+  <div class="sec-title"><h6>My Recent Activity</h6></div>
+  <div class="task-list" id="myTaskList">
+    <div class="task-item">
+      <div class="task-ico"><i class="bi bi-building"></i></div>
+      <div class="task-txt">
+        <h6>Production Added</h6>
+        <p>Gulab Jamun — 120 kg</p>
+      </div>
+      <div class="task-time">08:00 AM</div>
+    </div>
+    <div class="task-item">
+      <div class="task-ico"><i class="bi bi-arrow-left-right"></i></div>
+      <div class="task-txt">
+        <h6>Transfer Sent</h6>
+        <p>Chinar Park — 20 pcs Malpua</p>
+      </div>
+      <div class="task-time">10:20 AM</div>
+    </div>
+  </div>
+
+  <!-- Bottom Nav -->
+  <div class="bottom-nav">
+    <a href="user-dashboard-new.html" class="nav-item active"><i class="bi bi-house-door-fill"></i>Home</a>
+    <a href="production-new.html" class="nav-item"><i class="bi bi-building"></i>Production</a>
+    <a href="stock-new.html" class="nav-item"><i class="bi bi-box-seam"></i>Stock</a>
+    <a href="#" class="nav-item"><i class="bi bi-list"></i>Menu</a>
+  </div>
+
+</body>
+</html>

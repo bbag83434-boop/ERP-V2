@@ -33,7 +33,11 @@ function loginPost(req, res) {
                     message: "ভুল Username অথবা Password"
                 });
             }
-
+              req.session.user = {
+             id: user.id,
+             username: user.username,
+            role: user.role
+       };
             res.json({
                 success: true,
                 message: "Login Success",
@@ -48,8 +52,44 @@ function loginPost(req, res) {
     );
 
 }
+function checkSession(req, res) {
 
+    if (!req.session.user) {
+        return res.json({
+            loggedIn: false
+        });
+    }
+
+    res.json({
+        loggedIn: true,
+        user: req.session.user
+    });
+
+}
+function logout(req, res) {
+
+    req.session.destroy((err) => {
+
+        if (err) {
+            return res.status(500).json({
+                success: false,
+                message: "Logout failed"
+            });
+        }
+
+        res.clearCookie("chefbisu.sid");
+
+        res.json({
+            success: true,
+            message: "Logout successful"
+        });
+
+    });
+
+}
 module.exports = {
     login,
-    loginPost
+    loginPost,
+    checkSession,
+    logout
 };

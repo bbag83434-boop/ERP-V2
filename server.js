@@ -6,13 +6,32 @@ const app=express();
 app.use(cors());
 const port=3000;
 const authRoutes=require("./backend/routes/auth.routes");
-const productionRoutes = require("./backend/routes/production.routes");
+const productionRoutes = require("./backend/routes/production-old.routes");
 const transferRoutes = require("./backend/routes/transfer.routes");
 const supplierRoutes = require("./backend/routes/supplier.routes");
 const storeItemRoutes = require("./backend/routes/store-item.routes");
 const purchaseRoutes =
 require("./backend/routes/purchase.routes");
+const minimumStockRoutes = require("./backend/routes/minimum-stock.routes");
+const wastageRoutes = require("./backend/routes/wastage.routes");
+const session = require("express-session");
+
 app.use(express.json());
+
+    app.use(
+    session({
+        name: "chefbisu.sid",
+        secret: process.env.SESSION_SECRET || "chefbisu_dev_secret_change_in_production",
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            httpOnly: true,
+            secure: false, // Render-এ HTTPS হলে পরে true করব
+            sameSite: "lax",
+            maxAge: 1000 * 60 * 60 * 24 * 30 // 30 দিন
+        }
+    })
+);
 const path = require("path");
 
 app.use(
@@ -29,7 +48,11 @@ app.use("/api/transfer", transferRoutes);
 app.use("/api/supplier", supplierRoutes);
 app.use("/api/purchase", purchaseRoutes);
 app.use("/api/store-items", storeItemRoutes);
-
+app.use("/api/minimum-stock", minimumStockRoutes);
+app.use("/api/wastage", wastageRoutes);
+app.get('/api/health', (req, res) => {
+  res.status(200).json({ status: 'ok' });
+});
 app.listen(port,()=>{
     console.log("server is running...");
 });

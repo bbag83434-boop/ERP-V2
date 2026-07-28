@@ -460,4 +460,115 @@ sheet.columns.forEach((column) => {
     );
 
 });
+
+// ============================================
+// NEW ADDITIVE ROUTE — for on-screen Search tab
+// Does NOT touch /report (Excel) or /export-excel (Excel).
+// Returns plain JSON, same table & columns as /save, /all, /update.
+// ============================================
+router.get("/search-json", (req, res) => {
+
+    const { from, to, branch } = req.query;
+
+    if (!from || !to) {
+        return res.status(400).json({ message: "From and To date required" });
+    }
+
+    let query = `SELECT branch, item, SUM(qty) as total_qty, unit
+                 FROM transfers
+                 WHERE date BETWEEN ? AND ?`;
+    let params = [from, to];
+
+    if (branch && branch !== "All") {
+        query += " AND branch = ?";
+        params.push(branch);
+    }
+
+    query += " GROUP BY branch, item, unit ORDER BY branch ASC, item ASC";
+
+    db.all(query, params, (err, rows) => {
+        if (err) return res.status(500).json(err);
+        res.json(rows);
+    });
+
+});
+router.get("/today", (req, res) => {
+
+    const today = new Date().toISOString().split("T")[0];
+
+    db.get(
+        `
+        SELECT COUNT(*) AS total
+        FROM transfer
+        WHERE date = ?
+        `,
+        [today],
+        (err, row) => {
+
+            if (err) {
+                return res.status(500).json({
+                    error: err.message
+                });
+            }
+
+            res.json({
+                total: row.total
+            });
+
+        }
+    );
+
+});
+router.get("/outlet-summary", (req, res) => {
+
+    db.all(
+        `
+       SELECT
+    branch,
+    COUNT(DISTINCT item) AS item_count,
+    SUM(qty) AS total_qty
+FROM transfers
+GROUP BY branch
+ORDER BY total_qty DESC
+        `,
+        [],
+        (err, rows) => {
+
+            if (err) {
+                return res.status(500).json(err);
+            }
+
+            res.json(rows);
+
+        }
+    );
+
+});
+router.get("/outlet-summary", (req, res) => {
+
+    db.all(
+        `
+        SELECT
+            branch,
+            COUNT(DISTINCT item) AS item_count,
+            SUM(qty) AS total_qty
+        FROM transfers
+        GROUP BY branch
+        ORDER BY total_qty DESC
+        `,
+        [],
+        (err, rows) => {
+
+            if (err) {
+                return res.status(500).json({
+                    error: err.message
+                });
+            }
+
+            res.json(rows);
+
+        }
+    );
+
+});
 module.exports = router;

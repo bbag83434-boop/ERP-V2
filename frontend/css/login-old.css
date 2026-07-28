@@ -1,0 +1,722 @@
+/* ==========================================
+   Chef Bisu Login
+   Part 2A
+========================================== */
+
+:root{
+
+    --bg:#090909;
+    --card:#151515;
+    --card2:#1d1d1d;
+
+    --gold:#d4af37;
+    --gold-light:#f3d97a;
+
+    --white:#ffffff;
+    --text:#e8e8e8;
+    --muted:#9f9f9f;
+
+    --border:rgba(255,255,255,.08);
+
+    --radius:24px;
+
+    --transition:.35s ease;
+
+    --shadow:
+    0 20px 60px rgba(0,0,0,.55);
+
+}
+
+
+*{
+
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+
+}
+
+html{
+
+    scroll-behavior:smooth;
+
+}
+
+body{
+
+    font-family:'Inter',sans-serif;
+
+    background:var(--bg);
+
+    color:var(--white);
+
+    min-height:100vh;
+
+    overflow:hidden;
+
+}
+
+
+/* ==========================
+   Background
+========================== */
+
+.bg-wrapper{
+
+    position:fixed;
+
+    inset:0;
+
+    overflow:hidden;
+
+    z-index:-2;
+
+}
+
+.bg-gradient{
+
+    position:absolute;
+
+    inset:0;
+
+    background:
+    radial-gradient(circle at top,
+    rgba(212,175,55,.18),
+    transparent 55%),
+
+    radial-gradient(circle at bottom,
+    rgba(255,255,255,.03),
+    transparent 65%),
+
+    #090909;
+
+}
+
+.bg-grid{
+
+    position:absolute;
+
+    inset:0;
+
+    background-image:
+
+    linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),
+
+    linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);
+
+    background-size:30px 30px;
+
+    opacity:.25;
+
+}
+
+.bg-glow{
+
+    position:absolute;
+
+    border-radius:50%;
+
+    filter:blur(90px);
+
+}
+
+.glow-1{
+
+    width:260px;
+
+    height:260px;
+
+    background:rgba(212,175,55,.18);
+
+    top:-60px;
+
+    left:-60px;
+
+}
+
+.glow-2{
+
+    width:220px;
+
+    height:220px;
+
+    background:rgba(212,175,55,.12);
+
+    right:-50px;
+
+    bottom:-50px;
+
+}
+
+
+/* ==========================
+   Layout
+========================== */
+
+.login-page{
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:20px;
+
+}
+
+.login-card{
+
+    width:100%;
+
+    max-width:420px;
+
+    background:rgba(22,22,22,.72);
+
+    backdrop-filter:blur(18px);
+
+    border:1px solid var(--border);
+
+    border-radius:var(--radius);
+
+    padding:32px 24px;
+
+    box-shadow:var(--shadow);
+
+}
+
+
+/* ==========================
+   Logo
+========================== */
+
+.logo-section{
+
+    text-align:center;
+
+    margin-bottom:30px;
+
+}
+
+.logo-circle{
+
+    width:90px;
+
+    height:90px;
+
+    margin:auto;
+
+    border-radius:50%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:linear-gradient(145deg,#1f1f1f,#111);
+
+    border:2px solid rgba(212,175,55,.45);
+
+    overflow:hidden;
+
+}
+
+.logo-circle img{
+
+    width:68px;
+
+    height:68px;
+
+    object-fit:contain;
+
+}
+
+.brand-name{
+
+    margin-top:18px;
+
+    font-size:30px;
+
+    font-weight:800;
+
+    color:var(--gold);
+
+}
+
+.brand-subtitle{
+
+    margin-top:6px;
+
+    color:var(--muted);
+
+    font-size:14px;
+
+}
+
+
+/* ==========================
+   Welcome
+========================== */
+
+.welcome-section{
+
+    text-align:center;
+
+    margin-bottom:28px;
+
+}
+
+.welcome-section h2{
+
+    font-size:24px;
+
+    font-weight:700;
+
+}
+
+.welcome-section p{
+
+    margin-top:6px;
+
+    color:var(--muted);
+
+    font-size:14px;
+
+}
+
+
+/* ==========================
+   Responsive
+========================== */
+
+@media(max-width:480px){
+
+.login-card{
+
+padding:26px 18px;
+
+border-radius:22px;
+
+}
+
+.brand-name{
+
+font-size:26px;
+
+}
+
+.logo-circle{
+
+width:82px;
+height:82px;
+
+}
+
+}
+/* ==========================================
+   Form
+========================================== */
+
+.form-label{
+    color:var(--text);
+    font-size:14px;
+    font-weight:600;
+    margin-bottom:8px;
+}
+
+.input-box{
+    position:relative;
+    margin-bottom:18px;
+}
+
+.input-box i{
+    position:absolute;
+    left:18px;
+    top:50%;
+    transform:translateY(-50%);
+    color:var(--gold);
+    font-size:18px;
+    z-index:2;
+}
+
+.form-control{
+    height:56px;
+    padding-left:50px;
+    padding-right:50px;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,.08);
+    background:rgba(255,255,255,.04);
+    color:#fff;
+    transition:var(--transition);
+}
+
+.form-control::placeholder{
+    color:#888;
+}
+
+.form-control:focus{
+    background:rgba(255,255,255,.06);
+    color:#fff;
+    border-color:rgba(212,175,55,.55);
+    box-shadow:
+    0 0 0 4px rgba(212,175,55,.12),
+    0 0 20px rgba(212,175,55,.20);
+}
+
+
+/* Password */
+
+.password-toggle{
+
+    position:absolute;
+
+    right:10px;
+
+    top:50%;
+
+    transform:translateY(-50%);
+
+    width:40px;
+
+    height:40px;
+
+    border:none;
+
+    background:transparent;
+
+    color:var(--gold);
+
+    cursor:pointer;
+
+}
+
+
+/* Remember */
+
+.remember-row{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:24px;
+
+}
+
+.form-check-input{
+
+    background:#222;
+
+    border-color:#444;
+
+}
+
+.form-check-input:checked{
+
+    background:var(--gold);
+
+    border-color:var(--gold);
+
+}
+
+.form-check-label{
+
+    color:#bfbfbf;
+
+    font-size:14px;
+
+}
+
+
+/* Login Button */
+
+.login-btn{
+
+    height:58px;
+
+    border:none;
+
+    border-radius:16px;
+
+    font-size:17px;
+
+    font-weight:700;
+
+    letter-spacing:.4px;
+
+    color:#111;
+
+    background:linear-gradient(
+        135deg,
+        #d4af37,
+        #f3d97a
+    );
+
+    transition:var(--transition);
+
+    overflow:hidden;
+
+    position:relative;
+
+}
+
+.login-btn:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:
+    0 10px 30px rgba(212,175,55,.35);
+
+}
+
+.login-btn:active{
+
+    transform:scale(.98);
+
+}
+
+.login-btn::before{
+
+    content:"";
+
+    position:absolute;
+
+    top:0;
+
+    left:-120%;
+
+    width:60%;
+
+    height:100%;
+
+    background:
+    linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.5),
+        transparent
+    );
+
+}
+
+.login-btn:hover::before{
+
+    animation:shine 1.2s linear;
+
+}
+
+
+/* Footer */
+
+.login-footer{
+
+    margin-top:30px;
+
+    text-align:center;
+
+}
+
+.login-footer small{
+
+    color:#888;
+
+}
+
+
+/* Loading */
+
+.loading-overlay,
+
+.success-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    background:rgba(0,0,0,.82);
+
+    backdrop-filter:blur(10px);
+
+    z-index:9999;
+
+}
+
+.loading-card,
+
+.success-card{
+
+    width:300px;
+
+    padding:35px;
+
+    border-radius:24px;
+
+    text-align:center;
+
+    background:#181818;
+
+    border:1px solid rgba(255,255,255,.08);
+
+}
+
+.loading-spinner{
+
+    width:70px;
+
+    height:70px;
+
+    margin:auto;
+
+    border-radius:50%;
+
+    border:4px solid rgba(212,175,55,.18);
+
+    border-top:4px solid var(--gold);
+
+    animation:spin 1s linear infinite;
+
+}
+
+.success-icon{
+
+    font-size:70px;
+
+    color:#3ecf6d;
+
+}
+
+
+/* Animation */
+
+@keyframes spin{
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
+@keyframes shine{
+
+    from{
+
+        left:-120%;
+
+    }
+
+    to{
+
+        left:150%;
+
+    }
+
+}
+
+
+/* Utility */
+
+.d-none{
+
+    display:none !important;
+
+}
+/* ==========================================
+   Part 3A Animation CSS
+========================================== */
+
+.particle{
+
+    position:absolute;
+
+    width:4px;
+
+    height:4px;
+
+    border-radius:50%;
+
+    background:#d4af37;
+
+    opacity:.35;
+
+    animation:particleFloat linear infinite;
+
+}
+
+@keyframes particleFloat{
+
+    0%{
+
+        transform:translateY(0);
+
+        opacity:0;
+
+    }
+
+    20%{
+
+        opacity:.6;
+
+    }
+
+    100%{
+
+        transform:translateY(-180px);
+
+        opacity:0;
+
+    }
+
+}
+
+.shine{
+
+    animation:buttonGlow 1.2s;
+
+}
+
+@keyframes buttonGlow{
+
+    0%{
+
+        box-shadow:0 0 0 rgba(212,175,55,0);
+
+    }
+
+    50%{
+
+        box-shadow:0 0 30px rgba(212,175,55,.55);
+
+    }
+
+    100%{
+
+        box-shadow:0 0 0 rgba(212,175,55,0);
+
+    }
+
+}
+
+.logo-circle{
+
+    transition:transform .4s ease;
+
+}
+
+.login-card{
+
+    transition:transform .25s linear;
+
+}

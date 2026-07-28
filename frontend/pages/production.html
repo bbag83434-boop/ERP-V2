@@ -2,120 +2,418 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Production</title>
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-    <style>
-        body { background-color: #f4f6f9; }
+<title>Chef Bisu | Production</title>
 
-        #sidebarOffcanvas {
-            min-height: 100vh;
-            background-color: #1e2a3a;
-            color: #fff;
-        }
-        #sidebarOffcanvas .brand {
-            padding: 1.25rem 1rem;
-            font-size: 1.4rem;
-            font-weight: 700;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        #sidebarOffcanvas .nav-link {
-            color: #c9d2dc;
-            padding: 0.65rem 1rem;
-            border-radius: 0.375rem;
-            margin: 0.15rem 0.5rem;
-        }
-        #sidebarOffcanvas .nav-link:hover,
-        #sidebarOffcanvas .nav-link.active {
-            background-color: #2c3e50;
-            color: #fff;
-        }
-        .table-responsive table { margin-bottom: 0; }
-    </style>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="../css/loading.css">
+<link rel="stylesheet" href="../css/production.css">
+
 </head>
 
 <body>
 
-<div class="d-flex">
+<div class="d-flex justify-content-between align-items-center px-3 pt-3">
 
-    <!-- Sidebar -->
-    <nav id="sidebarOffcanvas" class="offcanvas-md offcanvas-start" tabindex="-1">
-        <div class="brand d-flex justify-content-between align-items-center">
-            <span>Chef Bisu</span>
-            <button type="button" class="btn-close btn-close-white d-md-none" data-bs-dismiss="offcanvas" data-bs-target="#sidebarOffcanvas"></button>
+    <button id="backBtn" class="btn btn-dark rounded-4">
+        <i class="bi bi-arrow-left"></i>
+    </button>
+
+    <div class="d-flex align-items-center">
+
+        <img
+            src="../assets/chef-bisu-logo.png"
+            class="logo">
+
+        <div class="ms-2">
+
+            <div class="fw-bold">
+
+                Chef
+                <span class="gold">
+                    Bisu
+                </span>
+
+            </div>
+
+            <small class="text-secondary">
+
+                Production
+
+            </small>
+
         </div>
-        <ul class="nav flex-column py-2">
-            <li class="nav-item"><a class="nav-link" href="dashboard.html"><i class="bi bi-house-door me-2"></i>Dashboard</a></li>
-            <li class="nav-item"><a class="nav-link active" href="production.html"><i class="bi bi-building me-2"></i>Production</a></li>
-            <li class="nav-item"><a class="nav-link" href="production-history.html"><i class="bi bi-clipboard-data me-2"></i>Production History</a></li>
-            <li class="nav-item"><a class="nav-link" href="transfer.html"><i class="bi bi-truck me-2"></i>Transfer</a></li>
-            <li class="nav-item"><a class="nav-link" href="transfer-history.html"><i class="bi bi-clipboard-data me-2"></i>Transfer History</a></li>
-            <li class="nav-item"><a class="nav-link" href="stock.html"><i class="bi bi-box-seam me-2"></i>Stock</a></li>
-            <li class="nav-item"><a class="nav-link" href="reports.html"><i class="bi bi-bar-chart me-2"></i>Reports</a></li>
-            <li class="nav-item"><a class="nav-link" href="users.html"><i class="bi bi-people me-2"></i>Users</a></li>
-            <li class="nav-item"><a class="nav-link" href="settings.html"><i class="bi bi-gear me-2"></i>Settings</a></li>
-        </ul>
-    </nav>
 
-    <!-- Main content -->
-    <div class="flex-grow-1">
+    </div>
 
-        <div class="bg-white border-bottom px-3 py-2 d-flex align-items-center gap-2 sticky-top">
-            <button class="btn btn-outline-secondary d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas">
-                <i class="bi bi-list"></i>
-            </button>
-            <h1 class="h4 mb-0">Production Entry</h1>
-        </div>
+    <button class="btn btn-dark rounded-4">
 
-        <div class="p-3">
+        <i class="bi bi-fire"></i>
 
-            <div class="card shadow-sm">
-                <div class="card-body">
+    </button>
 
-                    <div class="row g-2 mb-3">
-                        <div class="col-12 col-md-4 col-lg-3">
-                            <label class="form-label">Production Date</label>
-                            <input type="date" id="productionDate" class="form-control">
-                        </div>
+</div>
+
+<!-- Tabs -->
+
+<div class="px-3 mt-3">
+
+    <div class="tab-switch">
+
+        <button
+            id="newTab"
+            class="active">
+
+            New
+
+        </button>
+
+        <button
+            id="historyTab">
+
+            History
+
+        </button>
+
+        <button
+            id="searchTab">
+
+            Search
+
+        </button>
+
+    </div>
+<div id="newScreen">
+
+    <div class="px-3 mt-3">
+
+        <button class="date-card">
+
+            <i class="bi bi-calendar3"></i>
+
+            <span id="productionDateText"></span>
+
+            <i class="bi bi-chevron-down"></i>
+
+        </button>
+
+        <input
+            type="date"
+            id="productionDate"
+            hidden>
+
+    </div>
+
+    <div class="container mt-4">
+
+        <div class="card">
+
+            <div class="card-body">
+
+                <h5 class="mb-4">
+
+                    Add Production
+
+                </h5>
+
+                <div class="mb-3">
+
+                    <label class="form-label">
+
+                        Item
+
+                    </label>
+
+                    <select
+                        id="item"
+                        class="form-select">
+
+                        <option value="">
+
+                            Select Item
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <div class="row">
+
+                    <div class="col-6">
+
+                        <label class="form-label">
+
+                            Quantity
+
+                        </label>
+
+                        <input
+                            id="qty"
+                            type="number"
+                            min="1"
+                            class="form-control"
+                            placeholder="Enter Qty">
+
                     </div>
 
-                    <div class="table-responsive mb-3">
-                        <table class="table table-bordered table-sm align-middle">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>#</th>
-                                    <th>Item</th>
-                                    <th>Quantity</th>
-                                    <th>Unit</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="productionRows"></tbody>
-                        </table>
-                    </div>
+                    <div class="col-6">
 
-                    <div class="d-flex flex-wrap gap-2">
-                        <button type="button" id="addRowBtn" class="btn btn-outline-primary">
-                            <i class="bi bi-plus-lg me-1"></i>Add Row
-                        </button>
-                        <button id="saveBtn" class="btn btn-primary">
-                            <i class="bi bi-save me-1"></i>Save Production
-                        </button>
+                        <label class="form-label">
+
+                            Unit
+
+                        </label>
+
+                        <select
+                            id="unit"
+                            class="form-select">
+
+                            <option value="PCS">PCS</option>
+                            <option value="KG">KG</option>
+
+                        </select>
+
                     </div>
 
                 </div>
+
+                <div class="mt-4">
+
+                    <button
+                        id="addRowBtn"
+                        class="btn btn-warning w-100 fw-bold rounded-3">
+
+                        <i class="bi bi-plus-circle me-2"></i>
+
+                        Add Row
+
+                    </button>
+
+                </div>
+
             </div>
 
         </div>
+        <div class="mt-4">
+
+    <h6 class="text-white mb-3">
+
+        Production List
+
+    </h6>
+
+    <div id="productionList">
+
+        <div id="emptyState"
+             class="text-center py-4 rounded-4 border border-secondary">
+
+            <i class="bi bi-inbox fs-1 text-secondary"></i>
+
+            <p class="text-secondary mt-3 mb-0">
+
+                No production item added
+
+            </p>
+
+        </div>
+
     </div>
+
+    <button
+        id="saveBtn"
+        class="btn btn-warning w-100 fw-bold rounded-3 mt-4">
+
+        <i class="bi bi-save me-2"></i>
+
+        Save Production
+
+    </button>
+
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+</div>
+
+</div>
+
+</div>
+</div>
+<!-- ================= History ================= -->
+
+<div id="historyScreen" style="display:none;">
+
+    <div class="px-3 mt-3">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+
+            <h5 class="mb-0">
+
+                <i class="bi bi-clock-history text-warning me-2"></i>
+
+                Production History
+
+            </h5>
+
+            <button
+                id="refreshHistoryBtn"
+                class="btn btn-dark rounded-3">
+
+                <i class="bi bi-arrow-clockwise"></i>
+
+            </button>
+
+        </div>
+
+        <div id="historyList">
+
+            <div
+                class="text-center py-5 text-secondary">
+
+                <i class="bi bi-clock-history fs-1"></i>
+
+                <p class="mt-3 mb-0">
+
+                    No production history found
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- ================= Search ================= -->
+
+<div id="searchScreen" style="display:none;">
+
+    <div class="container mt-3">
+
+        <div class="card">
+
+            <div class="card-body">
+
+                <h5 class="mb-4">
+
+                    Search Production
+
+                </h5>
+
+                <div class="row">
+
+                    <div class="col-6">
+
+                        <label class="form-label">
+
+                            From Date
+
+                        </label>
+
+                        <input
+                            type="date"
+                            id="fromDate"
+                            class="form-control">
+
+                    </div>
+
+                    <div class="col-6">
+
+                        <label class="form-label">
+
+                            To Date
+
+                        </label>
+
+                        <input
+                            type="date"
+                            id="toDate"
+                            class="form-control">
+
+                    </div>
+
+                </div>
+
+                <button
+                    id="searchBtn"
+                    class="btn btn-warning w-100 fw-bold rounded-3 mt-4">
+
+                    <i class="bi bi-search me-2"></i>
+
+                    Search
+
+                </button>
+
+            </div>
+
+        </div>
+
+        <div
+            id="searchResult"
+            class="mt-4">
+
+        </div>
+
+    </div>
+
+</div>
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="loading-overlay">
+
+    <div class="loading-box">
+
+        <div class="loader"></div>
+
+        <h5 id="loadingTitle">
+            Saving Production...
+        </h5>
+
+        <p id="loadingText">
+            Please wait...
+        </p>
+
+    </div>
+
+</div>
+
+<!-- Success Overlay -->
+<div id="successOverlay" class="loading-overlay">
+
+    <div class="loading-box">
+
+        <div class="success-circle">
+
+            <i class="bi bi-check-lg"></i>
+
+        </div>
+
+        <h5>
+
+            Production Saved
+
+        </h5>
+
+        <p>
+
+            Successfully
+
+        </p>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="../js/loading.js"></script>
+
 <script src="../js/production.js"></script>
 
 </body>
+
 </html>

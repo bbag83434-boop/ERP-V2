@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Chef Bisu</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0c0c0e">
+<link rel="stylesheet" href="splash.css">
+</head>
+<body>
+
+  <div class="splash-container">
+
+    <!-- Gold light beam from top -->
+    <div class="light-beam"></div>
+
+    <!-- Ambient wave lines -->
+    <svg class="wave-lines" viewBox="0 0 430 900" preserveAspectRatio="none">
+      <path class="wave wave1" d="M-50,650 C120,600 280,720 480,640" />
+      <path class="wave wave2" d="M-50,700 C140,760 260,610 480,700" />
+    </svg>
+
+    <!-- Logo block -->
+    <div class="logo-block">
+      <img class="brand-logo" src="assets/icons/logo-splash.png" alt="Chef Bisu" width="180" height="180">
+    </div>
+
+    <!-- Progress Ring -->
+    <div class="ring-wrap">
+      <svg class="ring-svg" viewBox="0 0 120 120">
+        <circle class="ring-bg" cx="60" cy="60" r="52" />
+        <circle class="ring-fg" cx="60" cy="60" r="52" />
+      </svg>
+      <div class="ring-text">
+        <span id="progress-num">0</span><span class="pct">%</span>
+      </div>
+    </div>
+
+    <p class="status-text" id="status-text">Preparing your workspace...</p>
+  </div>
+
+<script src="splash.js"></script>
+</body>
+</html>

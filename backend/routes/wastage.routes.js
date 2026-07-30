@@ -106,4 +106,38 @@ router.post("/", (req, res) => {
     }
 
 });
+router.get("/report", (req, res) => {
+
+    const { from, to } = req.query;
+
+    if (!from || !to) {
+        return res.status(400).json({
+            message: "From and To date required"
+        });
+    }
+
+    db.all(
+        `
+        SELECT
+            item,
+            SUM(qty) AS total_qty,
+            unit
+        FROM wastage
+        WHERE date BETWEEN ? AND ?
+        GROUP BY item, unit
+        ORDER BY item ASC
+        `,
+        [from, to],
+        (err, rows) => {
+
+            if (err) {
+                return res.status(500).json(err);
+            }
+
+            res.json(rows);
+
+        }
+    );
+
+});
 module.exports = router;

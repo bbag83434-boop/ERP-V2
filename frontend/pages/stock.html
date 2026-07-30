@@ -2,125 +2,492 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stock</title>
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<meta charset="UTF-8">
 
-    <style>
-        body { background-color: #f4f6f9; }
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-        #sidebarOffcanvas {
-            min-height: 100vh;
-            background-color: #1e2a3a;
-            color: #fff;
-        }
-        #sidebarOffcanvas .brand {
-            padding: 1.25rem 1rem;
-            font-size: 1.4rem;
-            font-weight: 700;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-        #sidebarOffcanvas .nav-link {
-            color: #c9d2dc;
-            padding: 0.65rem 1rem;
-            border-radius: 0.375rem;
-            margin: 0.15rem 0.5rem;
-        }
-        #sidebarOffcanvas .nav-link:hover,
-        #sidebarOffcanvas .nav-link.active {
-            background-color: #2c3e50;
-            color: #fff;
-        }
-        .table-responsive table { margin-bottom: 0; }
-    </style>
+<title>Chef Bisu | Stock</title>
+
+<!-- Bootstrap -->
+
+<link
+href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+rel="stylesheet">
+
+<link
+href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+rel="stylesheet">
+
+<link
+href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600;700&display=swap"
+rel="stylesheet">
+
+<style>
+
+:root{
+
+--bg:#0c0c0e;
+--card:#17171b;
+--gold:#d4a437;
+--text:#ffffff;
+--muted:#a8a8b3;
+--border:rgba(255,255,255,.08);
+
+}
+
+*{
+
+margin:0;
+padding:0;
+box-sizing:border-box;
+
+}
+
+body{
+
+background:var(--bg);
+color:var(--text);
+font-family:Inter,sans-serif;
+
+}
+
+.app{
+
+max-width:430px;
+margin:auto;
+min-height:100vh;
+background:var(--bg);
+
+}
+
+.topbar{
+
+height:64px;
+
+display:flex;
+
+align-items:center;
+
+justify-content:space-between;
+
+padding:0 18px;
+
+border-bottom:1px solid var(--border);
+
+position:sticky;
+
+top:0;
+
+background:#0c0c0e;
+
+z-index:100;
+
+}
+
+.topbar h5{
+
+margin:0;
+
+font-family:Poppins,sans-serif;
+
+font-weight:700;
+
+}
+
+.icon-btn{
+
+width:42px;
+
+height:42px;
+
+border-radius:12px;
+
+border:none;
+
+background:#1d1d22;
+
+color:#fff;
+
+}
+
+.page-body{
+
+padding:18px;
+
+}
+
+.card-dark{
+
+background:var(--card);
+
+border:1px solid var(--border);
+
+border-radius:18px;
+
+padding:18px;
+
+margin-bottom:18px;
+
+}
+
+.card-title{
+
+font-size:13px;
+
+color:var(--muted);
+
+margin-bottom:12px;
+
+}
+
+.summary{
+
+display:grid;
+
+grid-template-columns:repeat(2,1fr);
+
+gap:12px;
+
+margin-bottom:18px;
+
+}
+
+.summary-box{
+
+background:#1d1d22;
+
+border-radius:16px;
+
+padding:16px;
+
+text-align:center;
+
+}
+
+.summary-box h6{
+
+font-size:12px;
+
+color:var(--muted);
+
+margin-bottom:8px;
+
+}
+
+.summary-box h3{
+
+margin:0;
+
+font-size:22px;
+
+font-weight:700;
+
+color:var(--gold);
+
+}
+
+.form-control{
+
+background:#202026;
+
+border:1px solid var(--border);
+
+color:#fff;
+
+}
+
+.form-control:focus{
+
+background:#202026;
+
+color:#fff;
+
+border-color:var(--gold);
+
+box-shadow:none;
+
+}
+
+.btn-gold{
+
+background:var(--gold);
+
+border:none;
+
+color:#000;
+
+font-weight:700;
+
+border-radius:14px;
+
+height:48px;
+
+}
+
+.table-dark-custom{
+
+width:100%;
+
+border-collapse:collapse;
+
+}
+
+.table-dark-custom th{
+
+background:#202026;
+
+padding:14px;
+
+font-size:13px;
+
+}
+
+.table-dark-custom td{
+
+padding:14px;
+
+border-top:1px solid var(--border);
+
+font-size:13px;
+
+}
+
+.table-wrapper{
+
+overflow:auto;
+
+border-radius:16px;
+
+}
+
+</style>
+
 </head>
 
 <body>
 
-<div class="d-flex">
+<div class="app">
 
-    <!-- Sidebar -->
-    <nav id="sidebarOffcanvas" class="offcanvas-md offcanvas-start" tabindex="-1">
-        <div class="brand d-flex justify-content-between align-items-center">
-            <span>Chef Bisu</span>
-            <button type="button" class="btn-close btn-close-white d-md-none" data-bs-dismiss="offcanvas" data-bs-target="#sidebarOffcanvas"></button>
-        </div>
-        <ul class="nav flex-column py-2">
-            <li class="nav-item"><a class="nav-link" href="dashboard.html"><i class="bi bi-house-door me-2"></i>Dashboard</a></li>
-            <li class="nav-item"><a class="nav-link" href="production.html"><i class="bi bi-building me-2"></i>Production</a></li>
-            <li class="nav-item"><a class="nav-link" href="production-history.html"><i class="bi bi-clipboard-data me-2"></i>Production History</a></li>
-            <li class="nav-item"><a class="nav-link" href="transfer.html"><i class="bi bi-truck me-2"></i>Transfer</a></li>
-            <li class="nav-item"><a class="nav-link" href="transfer-history.html"><i class="bi bi-clipboard-data me-2"></i>Transfer History</a></li>
-            <li class="nav-item"><a class="nav-link active" href="stock.html"><i class="bi bi-box-seam me-2"></i>Stock</a></li>
-            <li class="nav-item"><a class="nav-link" href="reports.html"><i class="bi bi-bar-chart me-2"></i>Reports</a></li>
-            <li class="nav-item"><a class="nav-link" href="users.html"><i class="bi bi-people me-2"></i>Users</a></li>
-            <li class="nav-item"><a class="nav-link" href="settings.html"><i class="bi bi-gear me-2"></i>Settings</a></li>
-        </ul>
-    </nav>
+<header class="topbar">
 
-    <!-- Main content -->
-    <div class="flex-grow-1">
+<button
+class="icon-btn"
+id="menuToggle">
 
-        <div class="bg-white border-bottom px-3 py-2 d-flex justify-content-between align-items-center sticky-top">
-            <div class="d-flex align-items-center gap-2">
-                <button class="btn btn-outline-secondary d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas">
-                    <i class="bi bi-list"></i>
-                </button>
-                <h1 class="h4 mb-0">Stock Sheet</h1>
-            </div>
-            <div class="d-flex align-items-center gap-3">
-                <span><i class="bi bi-person-circle me-1"></i>Admin</span>
-                <button id="logoutBtn" class="btn btn-primary btn-sm">Logout</button>
-            </div>
-        </div>
+<i class="bi bi-list"></i>
 
-        <div class="p-3">
+</button>
 
-            <div class="card shadow-sm">
-                <div class="card-body">
+<h5>Stock</h5>
 
-                    <h2 class="h5 mb-3">Monthly Stock</h2>
+<button
+class="icon-btn">
 
-                    <div class="row g-2 mb-3 align-items-end">
-                        <div class="col-12 col-md-3">
-                            <label class="form-label">Select Month</label>
-                            <input type="month" id="stockMonth" class="form-control">
-                        </div>
-                        <div class="col-12 col-md-3">
-                            <button id="loadStockBtn" class="btn btn-primary w-100">
-                                <i class="bi bi-eye me-1"></i>Show Stock
-                            </button>
-                        </div>
-                    </div>
+<i class="bi bi-person-circle"></i>
 
-                    <div class="table-responsive">
-                        <table class="table table-bordered table-sm align-middle">
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Item</th>
-                                    <th>Opening</th>
-                                    <th>In (Production)</th>
-                                    <th>Out (Transfer)</th>
-                                    <th>Closing</th>
-                                </tr>
-                            </thead>
-                            <tbody id="stockTableBody"></tbody>
-                        </table>
-                    </div>
+</button>
 
-                </div>
-            </div>
+</header>
 
-        </div>
+<div class="page-body">
+    <!-- ================= SUMMARY ================= -->
+
+<div class="summary">
+
+    <div class="summary-box">
+
+        <h6>Opening</h6>
+
+        <h3 id="totalOpening">0</h3>
+
     </div>
+
+    <div class="summary-box">
+
+        <h6>Production</h6>
+
+        <h3 id="totalProduction">0</h3>
+
+    </div>
+
+    <div class="summary-box">
+
+        <h6>Transfer</h6>
+
+        <h3 id="totalTransfer">0</h3>
+
+    </div>
+    <div class="summary-box">
+
+    <h6>Wastage</h6>
+
+    <h3 id="totalWastage">0</h3>
+
+</div>
+    <div class="summary-box">
+
+        <h6>Closing</h6>
+
+        <h3 id="totalClosing">0</h3>
+
+    </div>
+
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+<!-- ================= FILTER ================= -->
+
+<div class="card-dark">
+
+    <div class="card-title">
+
+        Stock Filter
+
+    </div>
+
+    <div class="mb-3">
+
+        <label class="form-label">
+
+            Select Month
+
+        </label>
+
+        <!-- পুরোনো ID একই রাখা হয়েছে -->
+        <input
+            type="month"
+            id="stockMonth"
+            class="form-control">
+
+    </div>
+
+    <button
+        id="loadStockBtn"
+        class="btn btn-gold w-100">
+
+        <i class="bi bi-search"></i>
+
+        Show Stock
+
+    </button>
+
+</div>
+
+<!-- ================= STOCK TABLE ================= -->
+
+<div class="card-dark">
+
+    <div class="card-title">
+
+        Monthly Stock
+
+    </div>
+
+    <div class="table-wrapper">
+
+        <table class="table-dark-custom">
+
+            <thead>
+
+<tr>
+
+    <th>Item</th>
+
+    <th>Opening</th>
+
+    <th>Production</th>
+
+    <th>Transfer</th>
+
+    <th>Wastage</th>
+
+    <th>Closing</th>
+
+</tr>
+
+</thead>
+
+<tbody id="stockTableBody">
+
+</tbody>
+
+        </table>
+
+    </div>
+
+</div>
+<!-- ================= MENU OVERLAY ================= -->
+
+<div id="menuOverlay" class="menu-overlay"></div>
+
+<!-- ================= SIDEBAR ================= -->
+
+<aside id="appSidebar" class="app-sidebar">
+
+    <!-- Dashboard-এর একই Sidebar এখানে Paste করবে -->
+
+</aside>
+
+</div>
+<!-- End page-body -->
+
+</div>
+<!-- End app -->
+
+<!-- Bootstrap -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Auth -->
+
 <script src="../js/auth.js"></script>
+
+<!-- Stock Logic (আগেরটাই থাকবে) -->
+
 <script src="../js/stock.js"></script>
+
+<!-- Sidebar -->
+
+<script>
+
+const menuToggle = document.getElementById("menuToggle");
+const sidebar = document.getElementById("appSidebar");
+const overlay = document.getElementById("menuOverlay");
+
+function openMenu(){
+
+    sidebar.classList.add("show");
+    overlay.classList.add("show");
+
+    document.body.style.overflow="hidden";
+
+}
+
+function closeMenu(){
+
+    sidebar.classList.remove("show");
+    overlay.classList.remove("show");
+
+    document.body.style.overflow="";
+
+}
+
+menuToggle.addEventListener("click",openMenu);
+
+overlay.addEventListener("click",closeMenu);
+
+document.addEventListener("keydown",(e)=>{
+
+    if(e.key==="Escape"){
+
+        closeMenu();
+
+    }
+
+});
+
+</script>
 
 </body>
 </html>

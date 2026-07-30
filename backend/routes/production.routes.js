@@ -338,21 +338,47 @@ router.get("/stock/:month", (req, res) => {
 
                                     const totalOut = outRow && outRow.total ? outRow.total : 0;
 
-                                    const closing = Number(opening) + Number(totalIn) - Number(totalOut);
+                                    // ৫. এই মাসের মোট Wastage আনা
+                                    db.get(
+                                        `SELECT SUM(qty) AS total
+                                         FROM wastage
+                                         WHERE item = ?
+                                         AND strftime('%Y-%m', date) = ?`,
+                                        [itemName, month],
+                                        (err, wasteRow) => {
 
-                                    stockData.push({
-                                        item: itemName,
-                                        opening: opening,
-                                        in: totalIn,
-                                        out: totalOut,
-                                        closing: closing
-                                    });
+                                            if (err) {
+                                                console.error(err);
+                                                return;
+                                            }
 
-                                    completed++;
+                                            const totalWaste = wasteRow && wasteRow.total
+                                                ? Number(wasteRow.total)
+                                                : 0;
 
-                                    if (completed === items.length) {
-                                        res.json(stockData);
-                                    }
+                                            const closing =
+                                                Number(opening) +
+                                                Number(totalIn) -
+                                                Number(totalOut) -
+                                                Number(totalWaste);
+
+                                            stockData.push({
+                                                item: itemName,
+                                                opening: opening,
+                                                in: totalIn,
+                                                out: totalOut,
+                                                wastage: totalWaste,
+                                                closing: closing
+                                            });
+
+                                            completed++;
+
+                                            if (completed === items.length) {
+                                                res.json(stockData);
+                                            }
+
+                                        }
+                                    );
 
                                 }
                             );

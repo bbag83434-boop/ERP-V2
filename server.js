@@ -6,7 +6,7 @@ const app=express();
 app.use(cors());
 const port=3000;
 const authRoutes=require("./backend/routes/auth.routes");
-const productionRoutes = require("./backend/routes/production-old.routes");
+const productionRoutes = require("./backend/routes/production.routes");
 const transferRoutes = require("./backend/routes/transfer.routes");
 const supplierRoutes = require("./backend/routes/supplier.routes");
 const storeItemRoutes = require("./backend/routes/store-item.routes");
@@ -15,6 +15,7 @@ require("./backend/routes/purchase.routes");
 const minimumStockRoutes = require("./backend/routes/minimum-stock.routes");
 const wastageRoutes = require("./backend/routes/wastage.routes");
 const session = require("express-session");
+const openingStockRoutes = require("./backend/routes/opening-stock.routes");
 
 app.use(express.json());
 
@@ -50,6 +51,7 @@ app.use("/api/purchase", purchaseRoutes);
 app.use("/api/store-items", storeItemRoutes);
 app.use("/api/minimum-stock", minimumStockRoutes);
 app.use("/api/wastage", wastageRoutes);
+app.use("/api/opening-stock", openingStockRoutes);
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });

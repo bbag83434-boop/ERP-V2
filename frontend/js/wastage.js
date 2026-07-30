@@ -404,7 +404,7 @@ console.log(searchDate.value);
             `${API_URL}?item=${encodeURIComponent(item)}&date=${encodeURIComponent(date)}`
         );
 
-        //const result = await response.json();
+        const result = await response.json();
         //console.log(result);
 ///alert(result.length);
        const searchResult = document.getElementById("searchResult");

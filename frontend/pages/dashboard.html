@@ -286,13 +286,147 @@
     background:rgba(255,255,255,.08);
     font-size:11px;
 }
+/* ===== Premium Sidebar ===== */
+
+.menu-overlay{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.45);
+    backdrop-filter:blur(6px);
+    opacity:0;
+    visibility:hidden;
+    transition:.3s;
+    z-index:998;
+}
+
+.app-sidebar{
+    position:fixed;
+    top:0;
+    left:0;
+    width:320px;
+    max-width:85%;
+    height:100vh;
+    background:#17171b;
+    border-right:1px solid rgba(255,255,255,.08);
+    transform:translateX(-100%);
+    transition:transform .35s cubic-bezier(.22,1,.36,1);
+    z-index:999;
+    overflow-y:auto;
+    box-shadow:20px 0 60px rgba(0,0,0,.45);
+}
+
+.app-sidebar.show{
+    transform:translateX(0);
+}
+
+.menu-overlay.show{
+    opacity:1;
+    visibility:visible;
+}
+
+.sidebar-header{
+    padding:22px 18px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.sidebar-user{
+    display:flex;
+    gap:12px;
+    align-items:center;
+}
+
+.user-avatar{
+    width:52px;
+    height:52px;
+    border-radius:50%;
+    background:#d4a43722;
+    color:#d4a437;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:26px;
+}
+
+.close-btn{
+    border:none;
+    background:none;
+    color:#fff;
+    font-size:20px;
+}
+
+.menu-group{
+    padding:18px;
+}
+
+.menu-title{
+    color:#d4a437;
+    font-size:12px;
+    font-weight:700;
+    text-transform:uppercase;
+    margin-bottom:10px;
+}
+
+.menu-item{
+    display:flex;
+    align-items:center;
+    gap:14px;
+    color:#fff;
+    text-decoration:none;
+    padding:14px;
+    border-radius:14px;
+    margin-bottom:8px;
+    transition:.25s;
+}
+
+.menu-item:hover,
+.menu-item:active{
+    background:#232328;
+}
+
+.menu-item i{
+    color:#d4a437;
+    font-size:18px;
+}
+
+.logout{
+    color:#ff6b6b;
+}
+
+.menu-group.collapsible .menu-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    cursor:pointer;
+}
+
+.menu-group.collapsible .menu-title i{
+    transition:.25s;
+    font-size:14px;
+}
+
+.menu-group.collapsible.open .menu-title i{
+    transform:rotate(180deg);
+}
+
+.menu-group.collapsible .menu-item{
+    display:none;
+}
+
+.menu-group.collapsible.open .menu-item{
+    display:flex;
+}
 </style>
 </head>
 <body>
 
   <!-- Top bar -->
   <div class="topbar">
-    <button class="icon-btn"><i class="bi bi-list"></i></button>
+    <button class="icon-btn" id="menuToggle">
+    <i class="bi bi-list"></i>
+</button>
     <div class="brand">
       <div class="chef-icon"><i class="bi bi-egg-fried"></i></div>
       <span><small>CHEF BISU</small></span>
@@ -327,7 +461,7 @@
       <h6>Transfer</h6>
       <p>Send / Receive</p>
     </a>
-    <a href="reports-new.html" class="quick-card">
+    <a href="reports.html" class="quick-card">
       <div class="qi"><i class="bi bi-file-earmark-bar-graph"></i></div>
       <h6>Reports</h6>
       <p>View reports</p>
@@ -395,12 +529,7 @@
     </div>
   </div>
 
-  <!-- Bottom Nav -->
-  <div class="bottom-nav">
-    <a href="dashboard.html" class="nav-item active"><i class="bi bi-house-door-fill"></i>Home</a>
-    <button type="button" class="nav-item" onclick="history.back()"><i class="bi bi-arrow-left-circle"></i>Back</button>
-    <a href="#" class="nav-item"><i class="bi bi-list"></i>Menu</a>
-  </div>
+ 
 
 <script>
   function toggleRank(headEl){
@@ -607,6 +736,195 @@ loadOutletLeaderboard();
     }
 
 })();
+</script>
+
+<!-- ========= MENU OVERLAY ========= -->
+<div id="menuOverlay" class="menu-overlay"></div>
+
+<!-- ========= SIDEBAR ========= -->
+<aside id="appSidebar" class="app-sidebar">
+
+    <!-- Header -->
+    <div class="sidebar-header">
+
+        <div class="sidebar-user">
+
+            <div class="user-avatar">
+                <i class="bi bi-person-circle"></i>
+            </div>
+
+            <div>
+
+                <h6 id="userNameDisplay">Admin</h6>
+
+                <small>Chef Bisu ERP</small>
+
+            </div>
+
+        </div>
+
+        <button id="menuClose" class="close-btn">
+            <i class="bi bi-x-lg"></i>
+        </button>
+
+    </div>
+
+    <!-- Operations -->
+    <div class="menu-group collapsible">
+
+        <div class="menu-title">
+            <span>Operations</span>
+            <i class="bi bi-chevron-down"></i>
+        </div>
+
+        <a href="opening-stock.html" class="menu-item">
+            <i class="bi bi-box-arrow-in-down"></i>
+            <span>Opening Stock</span>
+        </a>
+
+        <a href="purchase.html" class="menu-item">
+            <i class="bi bi-cart-check"></i>
+            <span>Purchase</span>
+        </a>
+
+        <a href="wastage.html" class="menu-item">
+            <i class="bi bi-trash3"></i>
+            <span>Wastage</span>
+        </a>
+
+        <a href="supplier.html" class="menu-item">
+            <i class="bi bi-truck"></i>
+            <span>Suppliers</span>
+        </a>
+
+    </div>
+
+    <!-- Master -->
+    <div class="menu-group collapsible">
+
+        <div class="menu-title">
+            <span>Master Data</span>
+            <i class="bi bi-chevron-down"></i>
+        </div>
+
+        <a href="items.html" class="menu-item">
+            <i class="bi bi-box"></i>
+            <span>Items</span>
+        </a>
+
+        <a href="branches.html" class="menu-item">
+            <i class="bi bi-buildings"></i>
+            <span>Branches</span>
+        </a>
+
+        <a href="users.html" class="menu-item">
+            <i class="bi bi-people"></i>
+            <span>Users</span>
+        </a>
+
+    </div>
+
+    <!-- Admin -->
+    <div class="menu-group collapsible">
+
+        <div class="menu-title">
+            <span>Administration</span>
+            <i class="bi bi-chevron-down"></i>
+        </div>
+
+        <a href="month-lock.html" class="menu-item">
+            <i class="bi bi-lock"></i>
+            <span>Month Lock</span>
+        </a>
+
+        <a href="backup.html" class="menu-item">
+            <i class="bi bi-cloud-arrow-up"></i>
+            <span>Backup</span>
+        </a>
+
+        <a href="activity.html" class="menu-item">
+            <i class="bi bi-clock-history"></i>
+            <span>Activity Log</span>
+        </a>
+
+    </div>
+
+    <!-- Account -->
+    <div class="menu-group collapsible">
+
+        <div class="menu-title">
+            <span>Account</span>
+            <i class="bi bi-chevron-down"></i>
+        </div>
+
+        <a href="profile.html" class="menu-item">
+            <i class="bi bi-person"></i>
+            <span>Profile</span>
+        </a>
+
+        <a href="settings.html" class="menu-item">
+            <i class="bi bi-gear"></i>
+            <span>Settings</span>
+        </a>
+
+        <a href="/logout" class="menu-item logout">
+            <i class="bi bi-box-arrow-right"></i>
+            <span>Logout</span>
+        </a>
+
+    </div>
+
+</aside>
+<script>
+const menuToggle = document.getElementById("menuToggle");
+const menuClose = document.getElementById("menuClose");
+const sidebar = document.getElementById("appSidebar");
+const overlay = document.getElementById("menuOverlay");
+
+function openMenu(){
+
+    sidebar.classList.add("show");
+    overlay.classList.add("show");
+
+    document.body.style.overflow = "hidden";
+
+}
+
+function closeMenu(){
+
+    sidebar.classList.remove("show");
+    overlay.classList.remove("show");
+
+    document.body.style.overflow = "";
+
+}
+
+menuToggle.addEventListener("click", openMenu);
+
+menuClose.addEventListener("click", closeMenu);
+
+overlay.addEventListener("click", closeMenu);
+
+document.addEventListener("keydown",(e)=>{
+
+    if(e.key==="Escape"){
+
+        closeMenu();
+
+    }
+
+});
+
+// Collapsible menu groups (Administration, Account)
+document.querySelectorAll(".menu-group.collapsible .menu-title").forEach((title) => {
+
+    title.addEventListener("click", () => {
+
+        title.closest(".menu-group").classList.toggle("open");
+
+    });
+
+});
 </script>
 </body>
 </html>

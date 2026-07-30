@@ -359,7 +359,7 @@
   </div>
 
   <!-- Outlet Leaderboard -->
-  <div class="sec-title"><h6>Outlet-wise Transfer (This Month)</h6><a href="reports-new.html">View All</a></div>
+  <div class="sec-title"><h6>Outlet-wise Transfer (This Month)</h6><a href="reports.html">View All</a></div>
   <div class="alert-list" id="outletLeaderboard">
 
     
@@ -536,9 +536,16 @@ async function loadOutletLeaderboard() {
 
         data.forEach((row, index) => {
 
+            const itemsHtml = (row.items || []).map(it => `
+                <div class="item-chip">
+                    <span>${it.item}</span>
+                    <b>${it.qty}</b>
+                </div>
+            `).join("");
+
             container.innerHTML += `
                 <div class="rank-item">
-                    <div class="rank-head">
+                    <div class="rank-head" onclick="toggleRank(this)">
                         <div class="rank-badge badge-${index + 1}">${index + 1}</div>
 
                         <div>
@@ -549,6 +556,12 @@ async function loadOutletLeaderboard() {
                         <div class="rank-qty">
                             <b>${row.total_qty}</b>
                             <span>pcs</span>
+                        </div>
+                        <i class="bi bi-chevron-down rank-chevron"></i>
+                    </div>
+                    <div class="rank-detail">
+                        <div class="item-grid">
+                            ${itemsHtml}
                         </div>
                     </div>
                 </div>

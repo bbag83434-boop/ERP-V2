@@ -499,7 +499,7 @@ router.get("/today", (req, res) => {
     db.get(
         `
         SELECT COUNT(*) AS total
-        FROM transfers
+        FROM transfer
         WHERE date = ?
         `,
         [today],
@@ -523,46 +523,49 @@ router.get("/outlet-summary", (req, res) => {
 
     db.all(
         `
-        SELECT branch, item, SUM(qty) AS qty, unit
-        FROM transfers
-        GROUP BY branch, item, unit
-        ORDER BY branch ASC
+       SELECT
+    branch,
+    COUNT(DISTINCT item) AS item_count,
+    SUM(qty) AS total_qty
+FROM transfers
+GROUP BY branch
+ORDER BY total_qty DESC
         `,
         [],
         (err, rows) => {
 
             if (err) {
-                return res.status(500).json({ error: err.message });
+                return res.status(500).json(err);
             }
 
-            // branch অনুযায়ী group করে item-wise breakdown সহ পাঠানো
-            const grouped = {};
+            res.json(rows);
 
-            rows.forEach((row) => {
+        }
+    );
 
-                if (!grouped[row.branch]) {
-                    grouped[row.branch] = {
-                        branch: row.branch,
-                        item_count: 0,
-                        total_qty: 0,
-                        items: []
-                    };
-                }
+});
+router.get("/outlet-summary", (req, res) => {
 
-                grouped[row.branch].item_count++;
-                grouped[row.branch].total_qty += row.qty;
-                grouped[row.branch].items.push({
-                    item: row.item,
-                    qty: row.qty,
-                    unit: row.unit
+    db.all(
+        `
+        SELECT
+            branch,
+            COUNT(DISTINCT item) AS item_count,
+            SUM(qty) AS total_qty
+        FROM transfers
+        GROUP BY branch
+        ORDER BY total_qty DESC
+        `,
+        [],
+        (err, rows) => {
+
+            if (err) {
+                return res.status(500).json({
+                    error: err.message
                 });
+            }
 
-            });
-
-            const result = Object.values(grouped)
-                .sort((a, b) => b.total_qty - a.total_qty);
-
-            res.json(result);
+            res.json(rows);
 
         }
     );

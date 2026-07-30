@@ -1,4 +1,4 @@
-const CACHE_NAME = 'chefbisu-splash-v1';
+const CACHE_NAME = 'chefbisu-splash-v2'; // bumped so update flow can be detected
 const SHELL_FILES = [
   '/splash.html',
   '/splash.css',
@@ -12,7 +12,9 @@ self.addEventListener('install', function (event) {
       return cache.addAll(SHELL_FILES);
     })
   );
-  self.skipWaiting();
+  // skipWaiting() removed from here — now only runs when user taps "Update Now"
+  // (see message listener below). This lets login.js detect the waiting worker
+  // and show the update bar before activating it.
 });
 
 self.addEventListener('activate', function (event) {
@@ -25,6 +27,13 @@ self.addEventListener('activate', function (event) {
     })
   );
   self.clients.claim();
+});
+
+// Allows the page to tell a waiting worker to activate now (Update Now button)
+self.addEventListener('message', function (event) {
+  if (event.data === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
 });
 
 // Cache-first ONLY for the splash shell files, so the app opens

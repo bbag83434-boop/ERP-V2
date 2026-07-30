@@ -458,3 +458,82 @@ loginForm.addEventListener("submit",(e)=>{
 });
 
 }
+/* =========================================================
+   PWA Install & Update Prompt (Bottom Bar)
+========================================================= */
+
+const pwaInstallBar = document.getElementById("pwaInstallBar");
+const installNowBtn = document.getElementById("installNowBtn");
+const pwaUpdateBar = document.getElementById("pwaUpdateBar");
+const updateNowBtn = document.getElementById("updateNowBtn");
+
+let deferredInstallPrompt = null;
+let waitingWorker = null;
+
+document.addEventListener("DOMContentLoaded", initPWA);
+
+function initPWA() {
+    if (!("serviceWorker" in navigator)) return;
+
+    navigator.serviceWorker.getRegistration().then((reg) => {
+        if (!reg) return;
+
+        if (reg.waiting) {
+            showUpdateBar(reg.waiting);
+        }
+
+        reg.addEventListener("updatefound", () => {
+            const newWorker = reg.installing;
+            if (!newWorker) return;
+
+            newWorker.addEventListener("statechange", () => {
+                if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+                    showUpdateBar(newWorker);
+                }
+            });
+        });
+    });
+
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+        window.location.reload();
+    });
+}
+
+/* -----------------------------
+   Install Prompt
+----------------------------- */
+
+window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredInstallPrompt = e;
+    pwaInstallBar?.classList.remove("d-none");
+});
+
+installNowBtn?.addEventListener("click", async () => {
+    if (!deferredInstallPrompt) return;
+
+    pwaInstallBar?.classList.add("d-none");
+    deferredInstallPrompt.prompt();
+
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+});
+
+window.addEventListener("appinstalled", () => {
+    pwaInstallBar?.classList.add("d-none");
+});
+
+/* -----------------------------
+   Update Prompt
+----------------------------- */
+
+function showUpdateBar(worker) {
+    waitingWorker = worker;
+    pwaUpdateBar?.classList.remove("d-none");
+}
+
+updateNowBtn?.addEventListener("click", () => {
+    if (!waitingWorker) return;
+    pwaUpdateBar?.classList.add("d-none");
+    waitingWorker.postMessage("SKIP_WAITING");
+});

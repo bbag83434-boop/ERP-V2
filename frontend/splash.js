@@ -1,3 +1,4 @@
+
 (function () {
   const RING_CIRCUMFERENCE = 327; // 2 * PI * 52
   const progressEl = document.getElementById('progress-num');

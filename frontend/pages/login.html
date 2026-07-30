@@ -24,7 +24,9 @@ content="width=device-width,initial-scale=1">
 <link rel="manifest" href="/manifest.json">
 <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
 <link rel="icon" href="/assets/icons/favicon-32.png">
+<link rel="stylesheet" href="../css/pwa-prompt.css">
 <meta name="theme-color" content="#0c0c0e">
+
 </head>
 
 <body>
@@ -139,7 +141,17 @@ Welcome Back
 </h3>
 
 </div>
+<!-- PWA Install Bar -->
+<div id="pwaInstallBar" class="pwa-bar d-none">
+  <span><i class="bi bi-download"></i> Install Chef Bisu App</span>
+  <button id="installNowBtn">Install Now</button>
+</div>
 
+<!-- PWA Update Bar -->
+<div id="pwaUpdateBar" class="pwa-bar d-none">
+  <span><i class="bi bi-arrow-repeat"></i> New update available</span>
+  <button id="updateNowBtn">Update Now</button>
+</div>
 <script src="../js/login.js"></script>
 
 </body>

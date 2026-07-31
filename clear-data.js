@@ -10,7 +10,7 @@
 
 "use strict";
 
-const db = require("./config/db"); // server.js এর সাথে একই লেভেলে বসাও
+const db = require("./backend/config/db"); // server.js এর সাথে একই লেভেলে বসাও
 
 const tables = ["production", "transfers", "wastage", "opening_stock"];
 

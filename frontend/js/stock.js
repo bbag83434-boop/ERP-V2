@@ -73,3 +73,10 @@ async function loadStock() {
 document
 .getElementById("stockMonth")
 .addEventListener("change", loadStock);
+const backBtn = document.getElementById("backBtn");
+
+if (backBtn) {
+    backBtn.addEventListener("click", () => {
+        window.location.href = "/pages/dashboard.html";
+    });
+}

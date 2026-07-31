@@ -577,11 +577,15 @@
   });
 </script>
 <script>
-function updateGreeting() {
+async function updateGreeting() {
 
     const now = new Date();
     const hour = now.getHours();
+    const sessionRes = await fetch("/session");
+const session = await sessionRes.json();
 
+const userName = session.loggedIn ? session.user.username : "Guest";
+const role = session.loggedIn ? session.user.role : "";
     let greet = "Good Evening";
 
     if (hour >= 5 && hour < 12) {
@@ -590,8 +594,8 @@ function updateGreeting() {
         greet = "Good Afternoon";
     }
 
-    const userName = "Maruf";      // পরে login থেকে আসবে
-    const role = "Admin";          // পরে login থেকে আসবে
+    //const userName = "Maruf";      // পরে login থেকে আসবে
+   // const role = "Admin";          // পরে login থেকে আসবে
 
     const day = now.toLocaleDateString("en-GB", {
         weekday: "long",

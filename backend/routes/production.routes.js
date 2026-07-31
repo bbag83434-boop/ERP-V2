@@ -1272,4 +1272,43 @@ router.get("/today", (req, res) => {
     );
 
 });
+// ==========================================
+// Production WhatsApp Preview
+// ==========================================
+
+router.get("/whatsapp/:date", (req, res) => {
+
+    const date = req.params.date;
+
+    db.all(
+        `
+        SELECT
+            item,
+            SUM(qty) AS qty,
+            unit
+        FROM production
+        WHERE date = ?
+        GROUP BY item, unit
+        ORDER BY item ASC
+        `,
+        [date],
+        (err, rows) => {
+
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: err.message
+                });
+            }
+
+            res.json({
+                success: true,
+                date,
+                rows
+            });
+
+        }
+    );
+
+});
 module.exports = router;

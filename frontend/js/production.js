@@ -48,11 +48,11 @@ function showScreen(screen) {
     newScreen.style.display = "none";
     historyScreen.style.display = "none";
     searchScreen.style.display = "none";
-
+     whatsappScreen.style.display = "none";
     newTab.classList.remove("active");
     historyTab.classList.remove("active");
     searchTab.classList.remove("active");
-
+   whatsappTab.classList.remove("active");
     if (screen === "new") {
         newScreen.style.display = "block";
         newTab.classList.add("active");
@@ -68,13 +68,16 @@ function showScreen(screen) {
         searchScreen.style.display = "block";
         searchTab.classList.add("active");
     }
-
+if (screen === "whatsapp") {
+    whatsappScreen.style.display = "block";
+    whatsappTab.classList.add("active");
+}
 }
 
 newTab.addEventListener("click", () => showScreen("new"));
 historyTab.addEventListener("click", () => showScreen("history"));
 searchTab.addEventListener("click", () => showScreen("search"));
-
+whatsappTab.addEventListener("click", () => showScreen("whatsapp"));
 showScreen("new");
 // ============================================
 // Date
@@ -347,7 +350,20 @@ saveBtn.addEventListener("click", saveProduction);
 // ============================================
 
 async function init() {
+       try {
 
+    const res = await fetch("/session");
+    const data = await res.json();
+
+    if (data.loggedIn) {
+        loggedInUser = data.user.username;
+    }
+
+} catch (err) {
+
+    console.error(err);
+
+}
     initDate();
 
     await loadItems();
@@ -528,4 +544,149 @@ if (searchBtn) {
 
 }
 
+// ================================
+// WhatsApp Elements
+// ================================
+let loggedInUser = "";
+const waDateCard = document.getElementById("waDateCard");
+const waDate = document.getElementById("waDate");
+const waDateText = document.getElementById("waDateText");
+
+const preview = document.getElementById("waPreview");
+
+const copyBtn = document.getElementById("copyMessageBtn");
+const sendBtn = document.getElementById("sendWhatsappBtn");
+const status = document.getElementById("waStatus");
+
+// Default Date
+const today = new Date().toISOString().split("T")[0];
+
+waDate.value = today;
+waDateText.textContent = today;
+async function generateProductionWhatsappMessage() {
+
+    if (!waDate || !preview) return;
+
+    const date = waDate.value;
+
+    try {
+
+        const response = await fetch(`/api/production/whatsapp/${date}`);
+        const data = await response.json();
+
+        if (!data.success || data.rows.length === 0) {
+
+            preview.innerText =
+`🍳 CHEF BISU
+
+No Production found for this date.`;
+
+            return;
+        }
+
+        const selectedDate = new Date(date);
+
+        const formattedDate = selectedDate.toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+        });
+
+        const formattedTime = new Date().toLocaleTimeString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true
+        });
+
+        let message = "";
+
+        message += "🍳 CHEF BISU | Production Report\n\n";
+
+message += `📅 ${formattedDate}   |   🕒 ${formattedTime}\n`;
+
+message += "━━━━━━━━━━━━━━━━━━━━\n\n";
+
+        let totalItems = data.rows.length;
+
+data.rows.forEach((row, index) => {
+
+    const no = String(index + 1).padStart(2, "0");
+
+    message += `${no}. ${row.item}\n`;
+    message += `    ➜ ${row.qty} ${row.unit}\n\n`;
+
+});
+      message += "━━━━━━━━━━━━━━━━━━━━\n\n";
+
+message += `📋 Total Items : ${totalItems}\n\n`;
+if (loggedInUser) {
+    message += `👤 Prepared By : ${loggedInUser}\n\n`;
+}
+message += "──────────────\n";
+message += "Chef Bisu ERP";
+
+        preview.innerText = message;
+
+    } catch (err) {
+
+        console.error(err);
+
+        preview.innerText = "Failed to load production report.";
+
+    }
+
+}
+// Date Card Click
+waDateCard.addEventListener("click", () => {
+    waDate.showPicker();
+});
+
+// Date Change
+waDate.addEventListener("change", () => {
+
+    waDateText.textContent = waDate.value;
+
+    generateProductionWhatsappMessage();
+
+});
+
+generateProductionWhatsappMessage();
+// Copy Report
+copyBtn.addEventListener("click", async () => {
+
+    try {
+
+        await navigator.clipboard.writeText(preview.innerText);
+
+        waStatus.textContent = "Copied";
+        waStatus.className = "badge bg-success";
+
+    } catch {
+
+        alert("Copy failed");
+
+    }
+
+});
+// Send WhatsApp
+sendBtn.addEventListener("click", () => {
+
+    const text = encodeURIComponent(preview.innerText);
+
+    window.open(
+        `https://wa.me/?text=${text}`,
+        "_blank"
+    );
+
+    waStatus.textContent = "WhatsApp Opened";
+    waStatus.className = "badge bg-success";
+
+});
 init();
+const backBtn = document.getElementById("backBtn");
+
+if (backBtn) {
+    backBtn.addEventListener("click", () => {
+        window.location.href = "/pages/dashboard.html";
+    });
+}

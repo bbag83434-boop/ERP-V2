@@ -86,7 +86,12 @@
             Search
 
         </button>
+        <button
+            id="whatsappTab">
 
+          WhatsApp
+
+        </button>
     </div>
 <div id="newScreen">
 
@@ -242,6 +247,75 @@
 </div>
 
 </div>
+</div>
+<!-- ================= WhatsApp ================= -->
+
+<div id="whatsappScreen" style="display:none;">
+
+    <div class="px-3 mt-3">
+
+        <button class="date-card" id="waDateCard">
+
+            <i class="bi bi-calendar3"></i>
+
+            <span id="waDateText">Today</span>
+
+            <i class="bi bi-chevron-down"></i>
+
+        </button>
+
+        <input type="date" id="waDate" hidden>
+
+    </div>
+
+    <div class="container mt-4">
+
+        <div class="card">
+
+            <div class="card-body">
+
+                <h5 class="mb-3">
+                    <i class="bi bi-whatsapp text-success"></i>
+                    Production WhatsApp
+                </h5>
+
+                <pre id="waPreview"
+style="background:#101014;border:1px solid rgba(212,164,55,.25);border-radius:18px;padding:18px;color:#fff;white-space:pre-wrap;min-height:320px;"></pre>
+
+                <button
+                    id="copyMessageBtn"
+                    class="btn btn-warning w-100 mt-3">
+
+                    Copy Report
+
+                </button>
+
+                <button
+                    id="sendWhatsappBtn"
+                    class="btn btn-success w-100 mt-3">
+
+                    Send to WhatsApp
+
+                </button>
+
+                <div class="text-center mt-3">
+
+                    <span
+                        id="waStatus"
+                        class="badge bg-warning text-dark">
+
+                        Pending
+
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
 <!-- ================= History ================= -->
 

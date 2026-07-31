@@ -568,4 +568,40 @@ router.get("/outlet-summary", (req, res) => {
     );
 
 });
+// WhatsApp Message Data
+router.get("/whatsapp/:date", (req, res) => {
+
+    const date = req.params.date;
+
+    db.all(
+        `
+        SELECT
+            branch,
+            item,
+            qty,
+            unit
+        FROM transfers
+        WHERE date = ?
+        ORDER BY branch ASC, item ASC
+        `,
+        [date],
+        (err, rows) => {
+
+            if (err) {
+                return res.status(500).json({
+                    success: false,
+                    message: err.message
+                });
+            }
+
+            res.json({
+                success: true,
+                date,
+                rows
+            });
+
+        }
+    );
+
+});
 module.exports = router;

@@ -212,30 +212,67 @@ router.get("/items", (req, res) => {
 });
 router.post("/items", (req, res) => {
 
-    const { item_name } = req.body;
+    const {
+
+        item_name,
+        unit,
+        rate
+
+    } = req.body;
 
     if (!item_name) {
+
         return res.status(400).json({
+
             message: "Item Name Required"
+
         });
+
     }
 
     db.run(
-        "INSERT INTO items (item_name) VALUES (?)",
-        [item_name],
+
+        `INSERT INTO items
+        (
+            item_name,
+            unit,
+            rate
+        )
+        VALUES
+        (
+            ?,
+            ?,
+            ?
+        )`,
+
+        [
+
+            item_name,
+            unit || "PCS",
+            Number(rate) || 0
+
+        ],
+
         function (err) {
 
             if (err) {
+
                 return res.status(500).json({
+
                     message: "Item Already Exists"
+
                 });
+
             }
 
             res.json({
+
                 message: "Item Saved Successfully"
+
             });
 
         }
+
     );
 
 });
@@ -245,6 +282,70 @@ router.delete("/items/:id", (req, res) => {
         if (err) return res.status(500).json(err);
         res.json({ message: "Item Deleted Successfully" });
     });
+});
+// =============================
+// Update Item
+// =============================
+router.put("/items/:id", (req, res) => {
+
+    const id = req.params.id;
+
+    const {
+
+        item_name,
+        unit,
+        rate
+
+    } = req.body;
+
+    if (!item_name) {
+
+        return res.status(400).json({
+
+            message: "Item Name Required"
+
+        });
+
+    }
+
+    db.run(
+
+        `
+        UPDATE items
+        SET
+            item_name = ?,
+            unit = ?,
+            rate = ?
+        WHERE id = ?
+        `,
+
+        [
+
+            item_name,
+            unit || "PCS",
+            Number(rate) || 0,
+            id
+
+        ],
+
+        function (err) {
+
+            if (err) {
+
+                return res.status(500).json(err);
+
+            }
+
+            res.json({
+
+                message: "Item Updated Successfully"
+
+            });
+
+        }
+
+    );
+
 });
 router.get("/branches", (req, res) => {
 

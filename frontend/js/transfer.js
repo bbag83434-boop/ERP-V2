@@ -297,6 +297,7 @@ const editModalEl = document.getElementById("editModal");
 const editModal = new bootstrap.Modal(editModalEl);
 
 function openEditModal(id) {
+    console.log("Edit Click:", id)
     const row = historyData.find(r => String(r.id) === String(id));
     if (!row) return;
 
@@ -314,7 +315,8 @@ function openEditModal(id) {
 
     document.getElementById("editQty").value = row.qty;
     document.getElementById("editUnit").value = row.unit;
-
+    console.log(editModalEl);
+console.log(bootstrap);
     editModal.show();
 }
 

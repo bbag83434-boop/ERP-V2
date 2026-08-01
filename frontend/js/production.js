@@ -385,9 +385,9 @@ async function loadHistory() {
         </div>`;
 
         const res = await fetch("/api/production/all");
-        const data = await res.json();
+        historyData = await res.json();
 
-        if (!data.length) {
+        if (!historyData.length) {
 
             historyList.innerHTML = `
             <div class="text-center py-5 text-secondary">
@@ -397,7 +397,7 @@ async function loadHistory() {
             return;
         }
 
-        historyList.innerHTML = data.map(row => `
+        historyList.innerHTML = historyData.map(row => `
 
 <div class="history-card mb-3 p-3">
 
@@ -415,15 +415,26 @@ async function loadHistory() {
 
         </div>
 
-        <div class="text-end">
+        <div class="text-end d-flex align-items-center gap-3">
 
-            <h3 class="text-warning fw-bold mb-0">
-                ${row.qty}
-            </h3>
+            <div>
+                <h3 class="text-warning fw-bold mb-0">
+                    ${row.qty}
+                </h3>
 
-            <small class="text-secondary">
-                ${row.unit}
-            </small>
+                <small class="text-secondary">
+                    ${row.unit}
+                </small>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button class="delete-btn" style="background:#3a3a3f;" data-edit="${row.id}">
+                    <i class="bi bi-pencil"></i>
+                </button>
+                <button class="delete-btn" data-delete="${row.id}">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </div>
 
         </div>
 
@@ -432,6 +443,14 @@ async function loadHistory() {
 </div>
 
 `).join("");
+
+        historyList.querySelectorAll("[data-delete]").forEach(btn => {
+            btn.addEventListener("click", () => deleteProduction(btn.getAttribute("data-delete")));
+        });
+
+        historyList.querySelectorAll("[data-edit]").forEach(btn => {
+            btn.addEventListener("click", () => openEditModal(btn.getAttribute("data-edit")));
+        });
 
     } catch (err) {
 
@@ -600,7 +619,7 @@ No Production found for this date.`;
 
         let message = "";
 
-        message += "🍳 CHEF BISU | Production Report\n\n";
+        message += "🍳| Production Report\n\n";
 
 message += `📅 ${formattedDate}   |   🕒 ${formattedTime}\n`;
 
@@ -623,7 +642,7 @@ if (loggedInUser) {
     message += `👤 Prepared By : ${loggedInUser}\n\n`;
 }
 message += "──────────────\n";
-message += "Chef Bisu ERP";
+
 
         preview.innerText = message;
 
@@ -680,6 +699,94 @@ sendBtn.addEventListener("click", () => {
 
     waStatus.textContent = "WhatsApp Opened";
     waStatus.className = "badge bg-success";
+
+});
+// ============================================
+// Delete & Edit Production (History)
+// ============================================
+
+async function deleteProduction(id) {
+
+    const ok = confirm("এই এন্ট্রি ডিলিট করতে চান?");
+    if (!ok) return;
+
+    try {
+
+        const res = await fetch(`/api/production/delete/${id}`, {
+            method: "DELETE"
+        });
+
+        const result = await res.json();
+
+        alert(result.message || "Deleted");
+
+        loadHistory();
+
+    } catch (err) {
+
+        console.error("Delete Error:", err);
+        alert("Delete করা যায়নি");
+
+    }
+
+}
+
+const editModalEl = document.getElementById("editModal");
+const editModal = new bootstrap.Modal(editModalEl);
+
+function openEditModal(id) {
+
+    const row = historyData.find(r => String(r.id) === String(id));
+    if (!row) return;
+
+    document.getElementById("editId").value = row.id;
+
+    const editItem = document.getElementById("editItem");
+    editItem.innerHTML = itemList.map(i =>
+        `<option value="${i.item_name}" ${i.item_name === row.item ? "selected" : ""}>${i.item_name}</option>`
+    ).join("");
+
+    document.getElementById("editQty").value = row.qty;
+    document.getElementById("editUnit").value = row.unit;
+
+    editModal.show();
+
+}
+
+document.getElementById("editSaveBtn").addEventListener("click", async () => {
+
+    const id = document.getElementById("editId").value;
+    const item = document.getElementById("editItem").value;
+    const qty = document.getElementById("editQty").value;
+    const unit = document.getElementById("editUnit").value;
+
+    if (!item || !qty || !unit) {
+        alert("সব ফিল্ড পূরণ করুন");
+        return;
+    }
+
+    try {
+
+        const res = await fetch(`/api/production/update/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ item, qty, unit })
+        });
+
+        const result = await res.json();
+
+        alert(result.message || "Updated");
+
+        editModal.hide();
+
+        loadHistory();
+
+    } catch (err) {
+
+        console.error("Update Error:", err);
+        alert("Update করা যায়নি");
+
+    }
 
 });
 init();

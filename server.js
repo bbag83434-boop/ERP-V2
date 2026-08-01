@@ -16,6 +16,8 @@ const minimumStockRoutes = require("./backend/routes/minimum-stock.routes");
 const wastageRoutes = require("./backend/routes/wastage.routes");
 const session = require("express-session");
 const openingStockRoutes = require("./backend/routes/opening-stock.routes");
+const amountReportRoutes =
+require("./backend/routes/amount-report.routes");
 
 app.use(express.json());
 
@@ -52,6 +54,7 @@ app.use("/api/store-items", storeItemRoutes);
 app.use("/api/minimum-stock", minimumStockRoutes);
 app.use("/api/wastage", wastageRoutes);
 app.use("/api/opening-stock", openingStockRoutes);
+app.use("/api/amount-report", amountReportRoutes);
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'ok' });
 });

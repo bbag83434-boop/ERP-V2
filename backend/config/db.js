@@ -89,7 +89,42 @@ db.serialize = function (fn) {
 };
 
 module.exports = db;
+// ===============================
+// Safe Items Migration
+// ===============================
 
+db.all("PRAGMA table_info(items)", [], (err, columns) => {
+
+    if (err) {
+        console.log(err);
+        return;
+    }
+
+    const names = columns.map(c => c.name);
+
+    if (!names.includes("unit")) {
+
+        db.run(`
+            ALTER TABLE items
+            ADD COLUMN unit TEXT DEFAULT 'PCS'
+        `);
+
+        console.log("items.unit created");
+
+    }
+
+    if (!names.includes("rate")) {
+
+        db.run(`
+            ALTER TABLE items
+            ADD COLUMN rate REAL DEFAULT 0
+        `);
+
+        console.log("items.rate created");
+
+    }
+
+});
 // ---------------------------------------------
 // Create all tables (runs once on startup)
 // ---------------------------------------------

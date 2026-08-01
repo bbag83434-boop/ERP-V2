@@ -481,7 +481,43 @@ style="background:#101014;border:1px solid rgba(212,164,55,.25);border-radius:18
     </div>
 
 </div>
+<!-- Edit Production Modal -->
+<div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="background:#17171b; border:1px solid rgba(255,255,255,.08); border-radius:18px; color:#fff;">
+            <div class="modal-body p-4">
 
+                <h5 class="mb-3">Edit Production</h5>
+                <input type="hidden" id="editId">
+
+                <div class="mb-3">
+                    <label class="form-label">Item</label>
+                    <select id="editItem" class="form-select"></select>
+                </div>
+
+                <div class="row g-2 mb-3">
+                    <div class="col-6">
+                        <label class="form-label">Quantity</label>
+                        <input type="number" id="editQty" class="form-control" min="1">
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">Unit</label>
+                        <select id="editUnit" class="form-select">
+                            <option value="PCS">PCS</option>
+                            <option value="KG">KG</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button class="btn btn-secondary w-50 rounded-3" data-bs-dismiss="modal">Cancel</button>
+                    <button id="editSaveBtn" class="btn btn-warning w-50 fw-bold rounded-3">Update</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script src="../js/loading.js"></script>

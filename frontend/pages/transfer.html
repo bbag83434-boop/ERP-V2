@@ -193,6 +193,15 @@ body{
     cursor:pointer;
 }
 
+.refresh-btn.is-loading i{
+    display:inline-block;
+    animation:refresh-spin .8s linear infinite;
+}
+
+@keyframes refresh-spin{
+    to{ transform:rotate(360deg); }
+}
+
 </style>
 
 </head>
@@ -223,8 +232,8 @@ Transfer
 
 </div>
 
-<button class="btn btn-dark rounded-4">
-<i class="bi bi-arrow-left-right"></i>
+<button id="refreshBtn" class="btn btn-dark rounded-4 refresh-btn" type="button" aria-label="Refresh transfer data" title="Refresh">
+<i class="bi bi-arrow-clockwise"></i>
 </button>
 
 </div>

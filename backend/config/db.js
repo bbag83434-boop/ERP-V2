@@ -346,4 +346,13 @@ CREATE TABLE IF NOT EXISTS wastage (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 )
 `);
+db.run(`
+CREATE TABLE IF NOT EXISTS activity_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT NOT NULL,
+    action TEXT NOT NULL,
+    details TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+)
+`);
 });

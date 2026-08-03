@@ -212,6 +212,35 @@ async function loadHistory() {
     }
 }
 
+// ---------- Refresh Transfer Data ----------
+async function refreshTransferData() {
+    const refreshBtn = document.getElementById("refreshBtn");
+
+    if (refreshBtn?.disabled) return;
+
+    refreshBtn.disabled = true;
+    refreshBtn.classList.add("is-loading");
+
+    try {
+        await Promise.all([
+            loadItems(),
+            loadOutlets(),
+            loadSearchBranches(),
+            loadHistory()
+        ]);
+
+        if (document.getElementById("whatsappPane").classList.contains("active")) {
+            await generateWhatsappMessage();
+        }
+    } catch (err) {
+        console.error("Transfer Refresh Error:", err);
+        alert("Refresh করতে সমস্যা হয়েছে");
+    } finally {
+        refreshBtn.disabled = false;
+        refreshBtn.classList.remove("is-loading");
+    }
+}
+
 // Build filter chips dynamically from real branch list (loaded for Outlet dropdown)
 function renderHistoryFilters() {
     const chips = [`<button class="chip ${historyFilterBranch === "" ? "active" : ""}" data-branch="">All Outlets</button>`]
@@ -415,6 +444,9 @@ Promise.all([loadItems(), loadOutlets(), loadSearchBranches()]).then(() => {
     initDate();
     loadHistory();
 });
+
+document.getElementById("refreshBtn").addEventListener("click", refreshTransferData);
+
 const backBtn = document.getElementById("backBtn");
 
 if (backBtn) {

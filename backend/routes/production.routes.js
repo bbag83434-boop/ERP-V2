@@ -5,6 +5,29 @@ const router = express.Router();
 const db = require("../config/db");
 const ExcelJS = require("exceljs");
 const { requireLogin } = require("../middleware/auth.middleware");
+
+function recordActivity(req, action, details) {
+    const username = req.session && req.session.user
+        ? req.session.user.username
+        : "System";
+
+    db.run(
+        "INSERT INTO activity_logs (username, action, details) VALUES (?, ?, ?)",
+        [username, action, details || ""]
+    );
+}
+
+function requireAdmin(req, res, next) {
+    if (!req.session || !req.session.user) {
+        return res.status(401).json({ message: "Login required" });
+    }
+
+    if (req.session.user.role !== "admin") {
+        return res.status(403).json({ message: "Admin access required" });
+    }
+
+    next();
+}
 router.post("/save", requireLogin, (req, res) => {
 console.log(req.body);
     const { date, productionData } = req.body;
@@ -1217,6 +1240,9 @@ router.post("/create-month", (req, res) => {
             return res.json({ message: "কোনো Item নেই" });
         }
 
+        let completed = 0;
+        let totalOpening = 0;
+
         items.forEach((itemRow) => {
 
             const itemName = itemRow.item_name;
@@ -1260,6 +1286,11 @@ router.post("/create-month", (req, res) => {
                                             completed++;
 
                                             if (completed === items.length) {
+                                                recordActivity(
+                                                    req,
+                                                    "Month opening created",
+                                                    `${fromMonth} closing copied to ${toMonth} opening`
+                                                );
                                                 res.json({
                                                     message: `${fromMonth} এর Closing, ${toMonth} এর Opening হিসেবে সেভ হয়েছে`
                                                 });
@@ -1302,6 +1333,7 @@ router.post("/lock-month", (req, res) => {
         [month],
         function (err) {
             if (err) return res.status(500).json(err);
+            recordActivity(req, "Month locked", `Month: ${month}`);
             res.json({ message: `${month} Lock করা হয়েছে` });
         }
     );
@@ -1319,6 +1351,7 @@ router.post("/unlock-month", (req, res) => {
         [month],
         function (err) {
             if (err) return res.status(500).json(err);
+            recordActivity(req, "Month unlocked", `Month: ${month}`);
             res.json({ message: `${month} Unlock করা হয়েছে` });
         }
     );
@@ -1393,6 +1426,45 @@ Object.values(summary).forEach(data => {
     );
 
 });
+router.get("/admin/backup", requireAdmin, (req, res) => {
+    const backupTables = [
+        "users", "items", "branches", "production", "transfers",
+        "opening_stock", "locked_months", "minimum_stock", "wastage",
+        "store_items", "categories", "suppliers", "purchases", "purchase_items"
+    ];
+    const backup = {
+        exported_at: new Date().toISOString(),
+        application: "Chef Bisu ERP",
+        data: {}
+    };
+    let completed = 0;
+
+    backupTables.forEach((tableName) => {
+        db.all(`SELECT * FROM ${tableName}`, [], (err, rows) => {
+            if (err) return res.status(500).json({ message: "Backup export failed" });
+
+            backup.data[tableName] = rows;
+            completed++;
+
+            if (completed === backupTables.length) {
+                recordActivity(req, "Backup downloaded", "Full JSON data backup exported");
+                res.json(backup);
+            }
+        });
+    });
+});
+
+router.get("/admin/activity", requireAdmin, (req, res) => {
+    db.all(
+        "SELECT id, username, action, details, created_at FROM activity_logs ORDER BY id DESC LIMIT 100",
+        [],
+        (err, rows) => {
+            if (err) return res.status(500).json({ message: "Activity log unavailable" });
+            res.json(rows);
+        }
+    );
+});
+
 router.get("/search", (req, res) => {
 
     const { from, to } = req.query;

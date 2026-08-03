@@ -53,6 +53,7 @@
     width:17px;height:17px;border-radius:50%;
     display:flex;align-items:center;justify-content:center;
   }
+  .badge-dot.is-hidden{display:none;}
   .brand{display:flex;align-items:center;gap:8px;font-weight:700;font-size:15px;letter-spacing:.5px;}
   .brand .chef-icon{
     width:34px;height:34px;border-radius:10px;
@@ -153,14 +154,31 @@
   .nav-item i{font-size:19px;}
   .nav-item.active{color:var(--gold);}
 
-  /* Production Trend chart card */
+  /* Financial trend chart card */
   .chart-card{
     background:var(--card);border:1px solid var(--border);
     border-radius:18px;padding:18px;margin:0 18px;
   }
+  .chart-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+  .chart-title-wrap{display:flex;align-items:center;gap:10px;}
+  .chart-icon{
+    width:36px;height:36px;border-radius:11px;background:var(--gold-soft);color:var(--gold);
+    display:flex;align-items:center;justify-content:center;font-size:16px;
+  }
   .chart-card h6{margin:0;font-size:14px;font-weight:700;}
   .chart-card .chart-sub{font-size:11px;color:var(--text-dim);margin-top:1px;}
-  .chart-wrap{height:180px;margin-top:14px;position:relative;}
+  .chart-period{
+    font-size:10px;font-weight:700;color:var(--gold);padding:6px 8px;border-radius:8px;
+    background:var(--gold-soft);white-space:nowrap;
+  }
+  .chart-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:16px;}
+  .chart-metric{background:#101014;border:1px solid var(--border);border-radius:12px;padding:10px;}
+  .chart-metric span{display:block;color:var(--text-dim);font-size:9.5px;margin-bottom:4px;}
+  .chart-metric b{display:block;font-family:'Poppins',sans-serif;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .chart-metric.production b{color:var(--gold);}
+  .chart-metric.transfer b{color:#58b9ff;}
+  .chart-metric.difference b{color:var(--ok);}
+  .chart-wrap{height:190px;margin-top:14px;position:relative;}
 
   /* Branch-wise transfer list */
   .branch-item{
@@ -270,6 +288,11 @@
     font-size:28px;
     font-weight:700;
     color:var(--gold);
+}
+
+.rank-qty b.amount-display{
+    font-size:15px;
+    white-space:nowrap;
 }
 
 .rank-qty span{
@@ -431,9 +454,9 @@
       <div class="chef-icon"><i class="bi bi-egg-fried"></i></div>
       <span><small>CHEF BISU</small></span>
     </div>
-    <button class="icon-btn">
+    <button class="icon-btn" id="notificationButton" type="button" aria-label="Important alerts">
       <i class="bi bi-bell"></i>
-      <span class="badge-dot">3</span>
+      <span class="badge-dot is-hidden" id="notificationBadge">0</span>
     </button>
   </div>
 
@@ -489,10 +512,33 @@
     <div class="summary-card"><div class="num">2</div><div class="lbl">Purchase</div></div>
   </div>
 
-  <!-- Production Trend -->
-  <div class="sec-title"><h6>Production Trend</h6></div>
+  <!-- Financial Trend -->
+  <div class="sec-title"><h6>Financial Trend</h6></div>
   <div class="chart-card">
-    <div class="chart-sub">Last 5 days</div>
+    <div class="chart-card-head">
+      <div class="chart-title-wrap">
+        <div class="chart-icon"><i class="bi bi-graph-up-arrow"></i></div>
+        <div>
+          <h6>Transfer vs Production</h6>
+          <div class="chart-sub">Amount calculated from item rate</div>
+        </div>
+      </div>
+      <span class="chart-period">Last 30 days</span>
+    </div>
+    <div class="chart-summary">
+      <div class="chart-metric production">
+        <span>Production</span>
+        <b id="productionAmountTotal">₹0</b>
+      </div>
+      <div class="chart-metric transfer">
+        <span>Transfer</span>
+        <b id="transferAmountTotal">₹0</b>
+      </div>
+      <div class="chart-metric difference">
+        <span>Difference</span>
+        <b id="amountDifference">₹0</b>
+      </div>
+    </div>
     <div class="chart-wrap">
       <canvas id="productionTrendChart"></canvas>
     </div>
@@ -508,30 +554,13 @@
     
   <!-- Important Alerts -->
   <div class="sec-title"><h6>Important Alerts</h6></div>
-  <div class="alert-list">
+  <div class="alert-list" id="importantAlerts">
     <div class="alert-item">
-      <div class="alert-ico danger"><i class="bi bi-exclamation-triangle-fill"></i></div>
+      <div class="alert-ico ok"><i class="bi bi-arrow-repeat"></i></div>
       <div class="alert-txt">
-        <h6>6 items are low in stock</h6>
-        <p>Check and restock soon</p>
+        <h6>Loading alerts</h6>
+        <p>Please wait</p>
       </div>
-      <div class="alert-time">10m ago</div>
-    </div>
-    <div class="alert-item">
-      <div class="alert-ico warn"><i class="bi bi-exclamation-circle-fill"></i></div>
-      <div class="alert-txt">
-        <h6>2 transfers are pending</h6>
-        <p>Need your approval</p>
-      </div>
-      <div class="alert-time">25m ago</div>
-    </div>
-    <div class="alert-item">
-      <div class="alert-ico ok"><i class="bi bi-check-circle-fill"></i></div>
-      <div class="alert-txt">
-        <h6>Today's production completed</h6>
-        <p>Great job! Keep it up.</p>
-      </div>
-      <div class="alert-time">1h ago</div>
     </div>
   </div>
 
@@ -547,40 +576,131 @@
 </script>
 
 <script>
-  const ctx = document.getElementById('productionTrendChart');
-  new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: ['07-18', '07-19', '07-20', '07-21', '07-22'],
-      datasets: [{
-        label: 'Production',
-        data: [0, 600, 70, 440, 5],
-        borderColor: '#d4a437',
-        backgroundColor: 'rgba(212,164,55,0.12)',
-        borderWidth: 2.5,
-        pointBackgroundColor: '#d4a437',
-        pointBorderColor: '#0c0c0e',
-        pointRadius: 4,
-        tension: 0.4,
-        fill: true
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: { legend: { display: false } },
-      scales: {
-        x: {
-          ticks: { color: '#9a9a9f', font: { size: 10 } },
-          grid: { color: 'rgba(255,255,255,0.05)' }
-        },
-        y: {
-          ticks: { color: '#9a9a9f', font: { size: 10 } },
-          grid: { color: 'rgba(255,255,255,0.05)' }
+let financialTrendChart;
+
+function formatAmount(amount) {
+    return new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: "INR",
+        maximumFractionDigits: 0
+    }).format(Number(amount) || 0);
+}
+
+function formatCompactAmount(amount) {
+    const value = Number(amount) || 0;
+    if (value >= 100000) return `₹${(value / 100000).toFixed(1)}L`;
+    if (value >= 1000) return `₹${(value / 1000).toFixed(1)}K`;
+    return `₹${value}`;
+}
+
+async function loadFinancialTrend() {
+
+    try {
+        const res = await fetch("/api/production/amount-trend");
+
+        if (!res.ok) {
+            throw new Error("Unable to load financial trend");
         }
-      }
+
+        const data = await res.json();
+        const days = data.days || [];
+        const summary = data.summary || {};
+
+        document.getElementById("productionAmountTotal").textContent =
+            formatAmount(summary.production_amount);
+        document.getElementById("transferAmountTotal").textContent =
+            formatAmount(summary.transfer_amount);
+        document.getElementById("amountDifference").textContent =
+            formatAmount(summary.difference);
+
+        const canvas = document.getElementById("productionTrendChart");
+        const context = canvas.getContext("2d");
+        const productionGradient = context.createLinearGradient(0, 0, 0, 190);
+        productionGradient.addColorStop(0, "rgba(212,164,55,.34)");
+        productionGradient.addColorStop(1, "rgba(212,164,55,0)");
+
+        if (financialTrendChart) {
+            financialTrendChart.destroy();
+        }
+
+        financialTrendChart = new Chart(context, {
+            type: "line",
+            data: {
+                labels: days.map((day) => day.date),
+                datasets: [
+                    {
+                        label: "Production",
+                        data: days.map((day) => day.production_amount),
+                        borderColor: "#d4a437",
+                        backgroundColor: productionGradient,
+                        fill: true,
+                        borderWidth: 2.5,
+                        pointRadius: 0,
+                        pointHoverRadius: 4,
+                        pointBackgroundColor: "#d4a437",
+                        tension: .42
+                    },
+                    {
+                        label: "Transfer",
+                        data: days.map((day) => day.transfer_amount),
+                        borderColor: "#58b9ff",
+                        backgroundColor: "transparent",
+                        fill: false,
+                        borderWidth: 2.5,
+                        pointRadius: 0,
+                        pointHoverRadius: 4,
+                        pointBackgroundColor: "#58b9ff",
+                        tension: .42
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: "index", intersect: false },
+                plugins: {
+                    legend: {
+                        position: "bottom",
+                        labels: { color: "#d8d8db", boxWidth: 8, boxHeight: 8, usePointStyle: true, font: { size: 10 } }
+                    },
+                    tooltip: {
+                        backgroundColor: "#202027",
+                        borderColor: "rgba(255,255,255,.1)",
+                        borderWidth: 1,
+                        padding: 10,
+                        callbacks: { label: (item) => `${item.dataset.label}: ${formatAmount(item.raw)}` }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        border: { display: false },
+                        ticks: {
+                            color: "#9a9a9f",
+                            maxTicksLimit: 5,
+                            font: { size: 10 },
+                            callback: (_, index) => {
+                                const date = days[index] && days[index].date;
+                                return date ? date.slice(5) : "";
+                            }
+                        }
+                    },
+                    y: {
+                        grid: { color: "rgba(255,255,255,.05)" },
+                        border: { display: false },
+                        ticks: { color: "#9a9a9f", font: { size: 10 }, callback: (value) => formatCompactAmount(value) }
+                    }
+                }
+            }
+        });
+
+    } catch (err) {
+        console.error("Financial trend load failed:", err);
     }
-  });
+
+}
+
+loadFinancialTrend();
 </script>
 <script>
 async function updateGreeting() {
@@ -693,8 +813,8 @@ async function loadOutletLeaderboard() {
                         </div>
 
                         <div class="rank-qty">
-                            <b>${row.total_qty}</b>
-                            <span>pcs</span>
+                            <b class="amount-display">${formatAmount(row.total_amount)}</b>
+                            <span>Total Amount</span>
                         </div>
                         <i class="bi bi-chevron-down rank-chevron"></i>
                     </div>
@@ -718,6 +838,85 @@ async function loadOutletLeaderboard() {
 
 loadOutletLeaderboard();
 
+</script>
+<script>
+function escapeAlertText(value) {
+    const element = document.createElement("div");
+    element.textContent = String(value ?? "");
+    return element.innerHTML;
+}
+
+async function loadDashboardAlerts() {
+
+    const container = document.getElementById("importantAlerts");
+    const badge = document.getElementById("notificationBadge");
+
+    try {
+        const res = await fetch("/api/minimum-stock/alerts");
+
+        if (!res.ok) {
+            throw new Error("Unable to load alerts");
+        }
+
+        const alerts = await res.json();
+        const alertCount = alerts.length;
+
+        badge.textContent = alertCount > 99 ? "99+" : alertCount;
+        badge.classList.toggle("is-hidden", alertCount === 0);
+
+        if (alertCount === 0) {
+            container.innerHTML = `
+                <div class="alert-item">
+                    <div class="alert-ico ok"><i class="bi bi-check-circle-fill"></i></div>
+                    <div class="alert-txt">
+                        <h6>All stock levels are healthy</h6>
+                        <p>No item is currently below its minimum stock level</p>
+                    </div>
+                </div>
+            `;
+            return;
+        }
+
+        container.innerHTML = alerts.map((alert) => {
+            const item = escapeAlertText(alert.item);
+            const unit = escapeAlertText(alert.unit || "PCS");
+            const currentQty = Number(alert.current_qty) || 0;
+            const minimumQty = Number(alert.minimum_qty) || 0;
+
+            return `
+                <div class="alert-item">
+                    <div class="alert-ico danger"><i class="bi bi-exclamation-triangle-fill"></i></div>
+                    <div class="alert-txt">
+                        <h6>${item} is low in stock</h6>
+                        <p>Current: ${currentQty} ${unit} · Minimum: ${minimumQty} ${unit}</p>
+                    </div>
+                    <div class="alert-time">Restock</div>
+                </div>
+            `;
+        }).join("");
+
+    } catch (err) {
+        console.error("Dashboard alerts load failed:", err);
+        badge.classList.add("is-hidden");
+        container.innerHTML = `
+            <div class="alert-item">
+                <div class="alert-ico warn"><i class="bi bi-exclamation-circle-fill"></i></div>
+                <div class="alert-txt">
+                    <h6>Alerts are unavailable</h6>
+                    <p>Please refresh and try again</p>
+                </div>
+            </div>
+        `;
+    }
+
+}
+
+document.getElementById("notificationButton").addEventListener("click", () => {
+    document.getElementById("importantAlerts").scrollIntoView({ behavior: "smooth", block: "center" });
+});
+
+loadDashboardAlerts();
+setInterval(loadDashboardAlerts, 60000);
 </script>
 <script>
 (async function () {
@@ -820,6 +1019,11 @@ loadOutletLeaderboard();
         <a href="items.html" class="menu-item">
             <i class="bi bi-box"></i>
             <span>Items</span>
+        </a>
+
+        <a href="minimum-stock.html" class="menu-item">
+            <i class="bi bi-bell"></i>
+            <span>Minimum Stock</span>
         </a>
 
         <a href="branches.html" class="menu-item">

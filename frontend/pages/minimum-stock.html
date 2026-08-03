@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Chef Bisu | Minimum Stock</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#0c0c0e;--card:#17171b;--card-2:#1e1e23;--gold:#d4a437;--gold-soft:rgba(212,164,55,.14);--text:#f5f5f4;--text-dim:#9a9a9f;--border:rgba(255,255,255,.06);--danger:#e5544d;--ok:#3fbf6f;}
+  *{box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;max-width:430px;margin:0 auto;min-height:100vh;padding:18px 18px 32px;}
+  h1,h2,h3,h4,h5,h6,.brand{font-family:'Poppins',sans-serif;}
+  .topbar{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+  .back-btn{width:40px;height:40px;border:1px solid var(--border);border-radius:12px;background:var(--card);color:var(--text);font-size:18px;}
+  .brand{font-size:15px;font-weight:700;letter-spacing:.5px;line-height:1.1;}
+  .brand small{display:block;color:var(--gold);font-size:11px;letter-spacing:1px;}
+  .hero{margin-bottom:22px;}
+  .hero-icon{width:46px;height:46px;border:1px solid rgba(212,164,55,.45);border-radius:14px;background:var(--gold-soft);color:var(--gold);display:flex;align-items:center;justify-content:center;font-size:21px;margin-bottom:13px;}
+  .hero h1{font-size:21px;font-weight:700;margin:0 0 5px;}.hero p{font-size:12.5px;color:var(--text-dim);line-height:1.55;margin:0;}
+  .panel{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;margin-bottom:20px;}
+  .panel-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}.panel-title h6{margin:0;font-size:14px;font-weight:700;}.panel-title span{font-size:10px;color:var(--gold);background:var(--gold-soft);padding:5px 8px;border-radius:8px;}
+  .form-label{font-size:11.5px;color:var(--text-dim);margin-bottom:6px;}.form-control,.form-select{background:#101014;border:1px solid var(--border);color:var(--text);font-size:13px;border-radius:11px;min-height:43px;}.form-control:focus,.form-select:focus{background:#101014;color:var(--text);border-color:rgba(212,164,55,.65);box-shadow:0 0 0 .2rem rgba(212,164,55,.1);}.form-select option{background:#17171b;color:var(--text);}
+  .save-btn{width:100%;border:0;border-radius:12px;background:var(--gold);color:#16130c;font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;padding:12px;}.save-btn:disabled{opacity:.6;}
+  .notice{display:flex;gap:9px;background:rgba(212,164,55,.08);border:1px solid rgba(212,164,55,.16);border-radius:11px;padding:10px;font-size:11px;color:#c8c8cb;line-height:1.45;}.notice i{color:var(--gold);font-size:14px;}
+  .stock-list{display:flex;flex-direction:column;gap:9px;}.stock-item{display:flex;align-items:center;gap:11px;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:12px 13px;}.stock-icon{width:36px;height:36px;flex:0 0 36px;border-radius:10px;background:var(--gold-soft);color:var(--gold);display:flex;align-items:center;justify-content:center;}.stock-name{min-width:0;}.stock-name h6{font-size:13px;font-weight:600;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}.stock-name p{font-size:10.5px;color:var(--text-dim);margin:2px 0 0;}.stock-limit{margin-left:auto;text-align:right;white-space:nowrap;}.stock-limit b{display:block;font-family:'Poppins',sans-serif;color:var(--gold);font-size:15px;}.stock-limit span{display:block;color:var(--text-dim);font-size:10px;}.stock-actions{display:flex;flex-direction:column;gap:6px;}.action-btn{width:29px;height:29px;border:1px solid var(--border);border-radius:8px;background:#101014;color:var(--text-dim);font-size:13px;display:flex;align-items:center;justify-content:center;}.action-btn.edit:hover{color:var(--gold);border-color:rgba(212,164,55,.45);}.action-btn.delete:hover{color:var(--danger);border-color:rgba(229,84,77,.45);}.empty{padding:24px 14px;text-align:center;color:var(--text-dim);font-size:12px;}.empty i{font-size:24px;color:var(--gold);display:block;margin-bottom:8px;}
+  .toast-box{position:fixed;top:16px;left:50%;width:calc(100% - 36px);max-width:394px;transform:translateX(-50%);z-index:10;display:none;background:#24242a;border:1px solid var(--border);border-radius:12px;padding:12px 14px;font-size:12px;box-shadow:0 12px 35px rgba(0,0,0,.35);}.toast-box.show{display:flex;align-items:center;gap:9px;}.toast-box.success i{color:var(--ok);}.toast-box.error i{color:var(--danger);}
+</style>
+</head>
+<body>
+  <div class="toast-box" id="toastBox"><i class="bi bi-check-circle-fill"></i><span id="toastMessage"></span></div>
+
+  <div class="topbar">
+    <button class="back-btn" id="backButton" type="button" aria-label="Go back"><i class="bi bi-arrow-left"></i></button>
+    <div class="brand"><small>CHEF BISU</small>Minimum Stock</div>
+  </div>
+
+  <section class="hero">
+    <div class="hero-icon"><i class="bi bi-bell-fill"></i></div>
+    <h1>Stock Alert Setup</h1>
+    <p>Set a minimum quantity for each item. The Dashboard will notify you when stock reaches or falls below that level.</p>
+  </section>
+
+  <section class="panel">
+    <div class="panel-title"><h6>Add Minimum Stock</h6><span>Live Alerts</span></div>
+    <form id="minimumStockForm">
+      <div class="mb-3">
+        <label class="form-label" for="itemSelect">Item</label>
+        <select class="form-select" id="itemSelect" required><option value="">Loading items...</option></select>
+      </div>
+      <div class="row g-2 mb-3">
+        <div class="col-7">
+          <label class="form-label" for="minimumQty">Minimum Quantity</label>
+          <input class="form-control" id="minimumQty" type="number" min="0" step="0.01" placeholder="e.g. 20" required>
+        </div>
+        <div class="col-5">
+          <label class="form-label" for="unitInput">Unit</label>
+          <input class="form-control" id="unitInput" type="text" value="PCS" readonly>
+        </div>
+      </div>
+      <button class="save-btn" id="saveButton" type="submit"><i class="bi bi-check2-circle me-1"></i> Save Alert Limit</button>
+    </form>
+    <div class="notice mt-3"><i class="bi bi-info-circle-fill"></i><span>Alerts appear when current stock is equal to or below this limit.</span></div>
+  </section>
+
+  <div class="panel-title"><h6>Configured Items</h6><span id="configuredCount">0 Items</span></div>
+  <section class="stock-list" id="stockList">
+    <div class="empty"><i class="bi bi-arrow-repeat"></i>Loading configured items...</div>
+  </section>
+
+<script>
+const itemSelect = document.getElementById("itemSelect");
+const unitInput = document.getElementById("unitInput");
+const minimumStockForm = document.getElementById("minimumStockForm");
+const saveButton = document.getElementById("saveButton");
+const stockList = document.getElementById("stockList");
+const configuredCount = document.getElementById("configuredCount");
+let items = [];
+let configuredItems = [];
+
+function escapeHtml(value) {
+  const element = document.createElement("div");
+  element.textContent = String(value ?? "");
+  return element.innerHTML;
+}
+
+function showToast(message, type = "success") {
+  const toast = document.getElementById("toastBox");
+  toast.className = `toast-box ${type} show`;
+  toast.querySelector("i").className = type === "success" ? "bi bi-check-circle-fill" : "bi bi-exclamation-circle-fill";
+  document.getElementById("toastMessage").textContent = message;
+  window.clearTimeout(showToast.timer);
+  showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 3000);
+}
+
+function renderItemOptions() {
+  const savedNames = new Set(configuredItems.map((row) => row.item));
+  const availableItems = items.filter((item) => !savedNames.has(item.item_name));
+
+  itemSelect.innerHTML = '<option value="">Select an item</option>';
+  availableItems.forEach((item) => {
+    const option = document.createElement("option");
+    option.value = item.item_name;
+    option.dataset.unit = item.unit || "PCS";
+    option.textContent = item.item_name;
+    itemSelect.appendChild(option);
+  });
+
+  itemSelect.disabled = availableItems.length === 0;
+  saveButton.disabled = availableItems.length === 0;
+  if (availableItems.length === 0) itemSelect.innerHTML = '<option value="">All items are configured</option>';
+}
+
+function renderConfiguredItems() {
+  configuredCount.textContent = `${configuredItems.length} ${configuredItems.length === 1 ? "Item" : "Items"}`;
+
+  if (configuredItems.length === 0) {
+    stockList.innerHTML = '<div class="empty"><i class="bi bi-inboxes"></i>No minimum stock limit has been added yet.</div>';
+    return;
+  }
+
+  stockList.innerHTML = configuredItems.map((row) => `
+    <div class="stock-item">
+      <div class="stock-icon"><i class="bi bi-box-seam"></i></div>
+      <div class="stock-name"><h6>${escapeHtml(row.item)}</h6><p>Dashboard alert enabled</p></div>
+      <div class="stock-limit"><b>${Number(row.minimum_qty) || 0} ${escapeHtml(row.unit || "PCS")}</b><span>Minimum limit</span></div>
+      <div class="stock-actions">
+        <button class="action-btn edit" type="button" data-action="edit" data-id="${Number(row.id)}" title="Edit minimum quantity" aria-label="Edit ${escapeHtml(row.item)}"><i class="bi bi-pencil"></i></button>
+        <button class="action-btn delete" type="button" data-action="delete" data-id="${Number(row.id)}" title="Delete minimum stock" aria-label="Delete ${escapeHtml(row.item)}"><i class="bi bi-trash3"></i></button>
+      </div>
+    </div>
+  `).join("");
+}
+
+async function loadPageData() {
+  try {
+    const [itemsResponse, limitsResponse] = await Promise.all([
+      fetch("/api/production/items"),
+      fetch("/api/minimum-stock")
+    ]);
+
+    if (!itemsResponse.ok || !limitsResponse.ok) throw new Error("Unable to load minimum stock data");
+
+    items = await itemsResponse.json();
+    configuredItems = await limitsResponse.json();
+    renderItemOptions();
+    renderConfiguredItems();
+  } catch (error) {
+    console.error(error);
+    itemSelect.innerHTML = '<option value="">Unable to load items</option>';
+    stockList.innerHTML = '<div class="empty"><i class="bi bi-exclamation-circle"></i>Unable to load saved limits.</div>';
+    showToast("Unable to load minimum stock data", "error");
+  }
+}
+
+itemSelect.addEventListener("change", () => {
+  unitInput.value = itemSelect.selectedOptions[0]?.dataset.unit || "PCS";
+});
+
+minimumStockForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const item = itemSelect.value;
+  const minimumQtyValue = Number(document.getElementById("minimumQty").value);
+
+  if (!item || Number.isNaN(minimumQtyValue) || minimumQtyValue < 0) {
+    showToast("Select an item and enter a valid minimum quantity", "error");
+    return;
+  }
+
+  saveButton.disabled = true;
+  saveButton.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span> Saving...';
+
+  try {
+    const response = await fetch("/api/minimum-stock", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ item, minimum_qty: minimumQtyValue, unit: unitInput.value })
+    });
+
+    if (!response.ok) throw new Error("Unable to save minimum stock limit");
+
+    minimumStockForm.reset();
+    unitInput.value = "PCS";
+    showToast("Minimum stock limit saved successfully");
+    await loadPageData();
+  } catch (error) {
+    console.error(error);
+    showToast("Unable to save minimum stock limit", "error");
+  } finally {
+    saveButton.innerHTML = '<i class="bi bi-check2-circle me-1"></i> Save Alert Limit';
+    saveButton.disabled = itemSelect.disabled;
+  }
+});
+
+stockList.addEventListener("click", async (event) => {
+  const button = event.target.closest("[data-action]");
+  if (!button) return;
+
+  const id = Number(button.dataset.id);
+  const row = configuredItems.find((item) => Number(item.id) === id);
+  if (!row || !Number.isInteger(id) || id <= 0) {
+    showToast("Unable to find this minimum stock item", "error");
+    return;
+  }
+
+  const action = button.dataset.action;
+
+  if (action === "edit") {
+    const enteredValue = window.prompt(`Set minimum quantity for ${row.item}`, row.minimum_qty);
+    if (enteredValue === null) return;
+
+    const minimumQtyValue = Number(enteredValue);
+    if (!Number.isFinite(minimumQtyValue) || minimumQtyValue < 0) {
+      showToast("Enter a valid minimum quantity", "error");
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/minimum-stock/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ minimum_qty: minimumQtyValue, unit: row.unit || "PCS" })
+      });
+
+      if (!response.ok) throw new Error("Unable to update minimum stock limit");
+
+      showToast("Minimum stock limit updated");
+      await loadPageData();
+    } catch (error) {
+      console.error(error);
+      showToast("Unable to update minimum stock limit", "error");
+    }
+  }
+
+  if (action === "delete") {
+    const confirmed = window.confirm(`Delete the minimum stock limit for ${row.item}?`);
+    if (!confirmed) return;
+
+    try {
+      const response = await fetch(`/api/minimum-stock/${id}`, { method: "DELETE" });
+      if (!response.ok) throw new Error("Unable to delete minimum stock limit");
+
+      showToast("Minimum stock limit deleted");
+      await loadPageData();
+    } catch (error) {
+      console.error(error);
+      showToast("Unable to delete minimum stock limit", "error");
+    }
+  }
+});
+
+document.getElementById("backButton").addEventListener("click", () => {
+  if (window.history.length > 1) {
+    window.history.back();
+  } else {
+    window.location.href = "dashboard.html";
+  }
+});
+
+loadPageData();
+</script>
+</body>
+</html>

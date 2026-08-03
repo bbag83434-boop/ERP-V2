@@ -83,7 +83,7 @@ function renderTable(items) {
 
             <td>${item.item_name}</td>
 
-            <td>PCS</td>
+            <td>${item.unit}</td>
 
             <td>
 

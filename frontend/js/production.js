@@ -636,10 +636,9 @@ data.rows.forEach((row, index) => {
 
 });
       message += "━━━━━━━━━━━━━━━━━━━━\n\n";
-
 message += `📋 Total Items : ${totalItems}\n\n`;
 if (loggedInUser) {
-    message += `👤 Prepared By : ${loggedInUser}\n\n`;
+   // message += `👤 Prepared By : ${loggedInUser}\n\n`;
 }
 message += "──────────────\n";
 

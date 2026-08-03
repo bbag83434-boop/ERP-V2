@@ -523,9 +523,15 @@ router.get("/outlet-summary", (req, res) => {
 
     db.all(
         `
-        SELECT branch, item, SUM(qty) AS qty, unit
-        FROM transfers
-        GROUP BY branch, item, unit
+        SELECT
+            t.branch,
+            t.item,
+            SUM(t.qty) AS qty,
+            t.unit,
+            SUM(COALESCE(t.qty, 0) * COALESCE(i.rate, 0)) AS amount
+        FROM transfers t
+        LEFT JOIN items i ON i.item_name = t.item
+        GROUP BY t.branch, t.item, t.unit
         ORDER BY branch ASC
         `,
         [],
@@ -545,12 +551,14 @@ router.get("/outlet-summary", (req, res) => {
                         branch: row.branch,
                         item_count: 0,
                         total_qty: 0,
+                        total_amount: 0,
                         items: []
                     };
                 }
 
                 grouped[row.branch].item_count++;
                 grouped[row.branch].total_qty += row.qty;
+                grouped[row.branch].total_amount += Number(row.amount) || 0;
                 grouped[row.branch].items.push({
                     item: row.item,
                     qty: row.qty,
@@ -560,7 +568,7 @@ router.get("/outlet-summary", (req, res) => {
             });
 
             const result = Object.values(grouped)
-                .sort((a, b) => b.total_qty - a.total_qty);
+                .sort((a, b) => b.total_amount - a.total_amount);
 
             res.json(result);
 

@@ -127,6 +127,188 @@ async function loadBranches(){
 
 loadBranches();
 
+function escapeReportHtml(value) {
+
+    const element = document.createElement("div");
+    element.textContent = String(value ?? "");
+    return element.innerHTML;
+
+}
+
+function formatReportAmount(value) {
+
+    return new Intl.NumberFormat("en-IN", {
+        style: "currency",
+        currency: "INR",
+        maximumFractionDigits: 2
+    }).format(Number(value) || 0);
+
+}
+
+function getStockAmount(row, key) {
+
+    return (Number(row[key]) || 0) * (Number(row.rate) || 0);
+
+}
+
+function renderEnhancedAmountReport(data, from, to) {
+
+    const transferRows = data.rows || [];
+    const productionRows = data.production_rows || [];
+    const stockRows = data.stock_rows || [];
+
+    let transferGrandTotal = 0;
+    const groupedTransfers = transferRows.reduce((groups, row) => {
+
+        if (!groups[row.branch]) groups[row.branch] = [];
+        groups[row.branch].push(row);
+        return groups;
+
+    }, {});
+
+    const transferHtml = Object.keys(groupedTransfers).length === 0
+        ? `<div class="card mb-3"><div class="card-body text-center text-secondary py-4">No transfer data found for this date range.</div></div>`
+        : Object.entries(groupedTransfers).map(([outlet, rows]) => {
+
+            const outletTotal = rows.reduce((total, row) => total + (Number(row.amount) || 0), 0);
+            transferGrandTotal += outletTotal;
+
+            return `
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="text-warning mb-3"><i class="bi bi-building me-2"></i>${escapeReportHtml(outlet)}</h5>
+                        <div class="table-responsive">
+                            <table class="table table-dark table-borderless align-middle mb-2">
+                                <thead><tr><th>Item</th><th>Qty</th><th>Rate</th><th>Amount</th></tr></thead>
+                                <tbody>${rows.map((row) => `
+                                    <tr>
+                                        <td>${escapeReportHtml(row.item)}</td>
+                                        <td>${Number(row.qty) || 0} ${escapeReportHtml(row.unit)}</td>
+                                        <td>${formatReportAmount(row.rate)}</td>
+                                        <td class="text-warning">${formatReportAmount(row.amount)}</td>
+                                    </tr>
+                                `).join("")}</tbody>
+                            </table>
+                        </div>
+                        <div class="d-flex justify-content-between border-top pt-3"><strong>Outlet Total</strong><strong class="text-warning">${formatReportAmount(outletTotal)}</strong></div>
+                    </div>
+                </div>
+            `;
+
+        }).join("");
+
+    const productionTotal = productionRows.reduce((total, row) => total + (Number(row.amount) || 0), 0);
+    const productionHtml = productionRows.length === 0
+        ? `<div class="card"><div class="card-body text-center text-secondary py-4">No production data found for this date range.</div></div>`
+        : `
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-dark table-borderless align-middle mb-2">
+                            <thead><tr><th>Item</th><th>Qty</th><th>Rate</th><th>Amount</th></tr></thead>
+                            <tbody>${productionRows.map((row) => `
+                                <tr>
+                                    <td>${escapeReportHtml(row.item)}</td>
+                                    <td>${Number(row.qty) || 0} ${escapeReportHtml(row.unit)}</td>
+                                    <td>${formatReportAmount(row.rate)}</td>
+                                    <td class="text-warning">${formatReportAmount(row.amount)}</td>
+                                </tr>
+                            `).join("")}</tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex justify-content-between border-top pt-3"><strong>Production Total</strong><strong class="text-warning">${formatReportAmount(productionTotal)}</strong></div>
+                </div>
+            </div>
+        `;
+
+    const stockHtml = stockRows.length === 0
+        ? `<div class="card"><div class="card-body text-center text-secondary py-4">No stock movement found for this date range.</div></div>`
+        : stockRows.map((row) => {
+
+            const unit = escapeReportHtml(row.unit || "PCS");
+            const metrics = [
+                ["Opening", "opening_qty"],
+                ["Production In", "production_qty"],
+                ["Transfer Out", "transfer_qty"],
+                ["Wastage", "wastage_qty"],
+                ["Closing", "closing_qty"]
+            ];
+
+            return `
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="mb-0">${escapeReportHtml(row.item)}</h6>
+                            <small class="text-secondary">Rate: ${formatReportAmount(row.rate)}</small>
+                        </div>
+                        <div class="row g-2">
+                            ${metrics.map(([label, key]) => `
+                                <div class="col-6">
+                                    <div class="border rounded-3 p-2 h-100">
+                                        <small class="text-secondary d-block">${label}</small>
+                                        <strong>${Number(row[key]) || 0} ${unit}</strong>
+                                        <small class="text-warning d-block mt-1">${formatReportAmount(getStockAmount(row, key))}</small>
+                                    </div>
+                                </div>
+                            `).join("")}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+        }).join("");
+
+    reportContainer.innerHTML = `
+        <div class="mb-4"><h4 class="text-warning mb-3"><i class="bi bi-arrow-left-right me-2"></i>Transfer Report</h4>${transferHtml}<div class="card"><div class="card-body d-flex justify-content-between"><strong>Transfer Grand Total</strong><strong class="text-warning">${formatReportAmount(transferGrandTotal)}</strong></div></div></div>
+        <div class="mb-4"><h4 class="text-warning mb-3"><i class="bi bi-building-gear me-2"></i>Production Report</h4>${productionHtml}</div>
+        <div><h4 class="text-warning mb-3"><i class="bi bi-box-seam me-2"></i>Stock Report</h4><p class="text-secondary small">Opening for ${from.slice(0, 7)} · Movement from ${from} to ${to}</p>${stockHtml}</div>
+    `;
+
+    let whatsappText = `*CHEF BISU AMOUNT REPORT*\nDate: ${from} to ${to}\n\n*TRANSFER REPORT*\n`;
+
+    if (Object.keys(groupedTransfers).length === 0) {
+        whatsappText += "No transfer data found.\n";
+    } else {
+        Object.entries(groupedTransfers).forEach(([outlet, rows]) => {
+            const outletTotal = rows.reduce((total, row) => total + (Number(row.amount) || 0), 0);
+            whatsappText += `\n*${outlet}*\n`;
+            rows.forEach((row) => {
+                whatsappText += `- ${row.item}: ${row.qty} ${row.unit} x ${formatReportAmount(row.rate)} = ${formatReportAmount(row.amount)}\n`;
+            });
+            whatsappText += `Outlet Total: ${formatReportAmount(outletTotal)}\n`;
+        });
+        whatsappText += `\n*Transfer Grand Total: ${formatReportAmount(transferGrandTotal)}*\n`;
+    }
+
+    whatsappText += "\n*PRODUCTION REPORT*\n";
+    if (productionRows.length === 0) {
+        whatsappText += "No production data found.\n";
+    } else {
+        productionRows.forEach((row) => {
+            whatsappText += `- ${row.item}: ${row.qty} ${row.unit} x ${formatReportAmount(row.rate)} = ${formatReportAmount(row.amount)}\n`;
+        });
+        whatsappText += `*Production Total: ${formatReportAmount(productionTotal)}*\n`;
+    }
+
+    whatsappText += "\n*STOCK REPORT*\n";
+    if (stockRows.length === 0) {
+        whatsappText += "No stock movement found.\n";
+    } else {
+        stockRows.forEach((row) => {
+            const unit = row.unit || "PCS";
+            whatsappText += `\n*${row.item}*\n`;
+            whatsappText += `Opening: ${row.opening_qty} ${unit} (${formatReportAmount(getStockAmount(row, "opening_qty"))})\n`;
+            whatsappText += `Production In: ${row.production_qty} ${unit} (${formatReportAmount(getStockAmount(row, "production_qty"))})\n`;
+            whatsappText += `Transfer Out: ${row.transfer_qty} ${unit} (${formatReportAmount(getStockAmount(row, "transfer_qty"))})\n`;
+            whatsappText += `Wastage: ${row.wastage_qty} ${unit} (${formatReportAmount(getStockAmount(row, "wastage_qty"))})\n`;
+            whatsappText += `Closing: ${row.closing_qty} ${unit} (${formatReportAmount(getStockAmount(row, "closing_qty"))})\n`;
+        });
+    }
+
+    waPreview.textContent = whatsappText;
+
+}
+
 
 // =========================================
 // Generate Report
@@ -175,8 +357,11 @@ generateBtn.addEventListener("click",async()=>{
         const data = await res.json();
 
         console.log(data);
+        data.rows = data.rows || [];
+        data.production_rows = data.production_rows || [];
+        data.stock_rows = data.stock_rows || [];
       // যদি Data না থাকে
-if (!data.success || !data.rows || data.rows.length === 0) {
+if (!data.success || (data.rows.length === 0 && data.production_rows.length === 0 && data.stock_rows.length === 0)) {
 
     reportContainer.innerHTML = `
 
@@ -391,7 +576,7 @@ waText += `\n💰 Outlet Total : ₹${waTotal.toFixed(2)}\n`;
 waText += `\n━━━━━━━━━━━━━━\n`;
 waText += `💵 *Grand Total : ₹${grandTotal.toFixed(2)}*`;
 
-waPreview.textContent = waText;
+renderEnhancedAmountReport(data, from, to);
     }catch(err){
 
         console.error(err);

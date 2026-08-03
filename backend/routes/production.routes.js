@@ -801,6 +801,82 @@ router.get("/chart", (req, res) => {
 
     });
     });
+
+// Dashboard financial trend. Amounts are calculated from the current item rate.
+router.get("/amount-trend", (req, res) => {
+
+    db.all(
+        `
+        WITH daily_amounts AS (
+            SELECT
+                p.date AS date,
+                SUM(COALESCE(p.qty, 0) * COALESCE(i.rate, 0)) AS production_amount,
+                0 AS transfer_amount
+            FROM production p
+            LEFT JOIN items i ON i.item_name = p.item
+            GROUP BY p.date
+
+            UNION ALL
+
+            SELECT
+                t.date AS date,
+                0 AS production_amount,
+                SUM(COALESCE(t.qty, 0) * COALESCE(i.rate, 0)) AS transfer_amount
+            FROM transfers t
+            LEFT JOIN items i ON i.item_name = t.item
+            GROUP BY t.date
+        ),
+        daily_totals AS (
+            SELECT
+                date,
+                SUM(production_amount) AS production_amount,
+                SUM(transfer_amount) AS transfer_amount
+            FROM daily_amounts
+            GROUP BY date
+        )
+        SELECT *
+        FROM (
+            SELECT date, production_amount, transfer_amount
+            FROM daily_totals
+            ORDER BY date DESC
+            LIMIT 30
+        )
+        ORDER BY date ASC
+        `,
+        [],
+        (err, rows) => {
+
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
+
+            const days = rows.map((row) => ({
+                date: row.date,
+                production_amount: Number(row.production_amount) || 0,
+                transfer_amount: Number(row.transfer_amount) || 0
+            }));
+
+            const summary = days.reduce(
+                (totals, day) => {
+                    totals.production_amount += day.production_amount;
+                    totals.transfer_amount += day.transfer_amount;
+                    return totals;
+                },
+                { production_amount: 0, transfer_amount: 0 }
+            );
+
+            res.json({
+                days,
+                summary: {
+                    ...summary,
+                    difference: summary.production_amount - summary.transfer_amount
+                }
+            });
+
+        }
+    );
+
+});
    router.get("/report", (req, res) => {
 
     const { from, to } = req.query;

@@ -1081,7 +1081,7 @@ setInterval(loadDashboardAlerts, 60000);
             <span>Settings</span>
         </a>
 
-        <a href="/logout" class="menu-item logout">
+        <a href="#" id="logoutBtn" class="menu-item logout">
             <i class="bi bi-box-arrow-right"></i>
             <span>Logout</span>
         </a>
@@ -1089,6 +1089,35 @@ setInterval(loadDashboardAlerts, 60000);
     </div>
 
 </aside>
+<div class="modal fade" id="logoutModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white rounded-4">
+
+            <div class="modal-header border-secondary">
+                <h5 class="modal-title">
+                    <i class="bi bi-box-arrow-right text-warning"></i>
+                    Logout
+                </h5>
+            </div>
+
+            <div class="modal-body">
+                আপনি কি Logout করতে চান?
+            </div>
+
+            <div class="modal-footer border-secondary">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">
+                    Cancel
+                </button>
+
+                <button class="btn btn-warning" id="confirmLogoutBtn">
+                    Logout
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 const menuToggle = document.getElementById("menuToggle");
 const menuClose = document.getElementById("menuClose");
@@ -1139,6 +1168,47 @@ document.querySelectorAll(".menu-group.collapsible .menu-title").forEach((title)
     });
 
 });
+document.getElementById("logoutBtn").addEventListener("click", async (e) => {
+
+    e.preventDefault();
+
+   
+
+});
+
+// Back button এ login page এ ফিরে যেতে দেবে না
+history.pushState(null, "", location.href);
+
+window.addEventListener("popstate", () => {
+
+    history.pushState(null, "", location.href);
+
+    location.replace("/pages/dashboard.html");
+
+});
+const logoutModal = new bootstrap.Modal(
+    document.getElementById("logoutModal")
+);
+
+document.getElementById("logoutBtn").addEventListener("click", (e) => {
+    e.preventDefault();
+    logoutModal.show();
+});
+
+document.getElementById("confirmLogoutBtn").addEventListener("click", async () => {
+
+    const res = await fetch("/logout", {
+        method: "POST",
+        credentials: "include"
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+        location.replace("/pages/login.html");
+    }
+});
 </script>
+
 </body>
 </html>

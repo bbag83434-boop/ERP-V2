@@ -9,59 +9,17 @@
 <link rel="stylesheet" href="splash.css">
 </head>
 <body>
-
-  <div class="splash-container">
-
-    <!-- Gold light beam from top -->
-    <div class="light-beam"></div>
-
-    <!-- Ambient wave lines -->
-    <svg class="wave-lines" viewBox="0 0 430 900" preserveAspectRatio="none">
-      <path class="wave wave1" d="M-50,650 C120,600 280,720 480,640" />
-      <path class="wave wave2" d="M-50,700 C140,760 260,610 480,700" />
-    </svg>
-
-    <!-- Logo block -->
-    <div class="logo-block">
-      <img class="brand-logo" src="assets/icons/logo-splash.png" alt="Chef Bisu" width="180" height="180">
-    </div>
-
-    <!-- Progress Ring -->
-    <div class="ring-wrap">
-      <svg class="ring-svg" viewBox="0 0 120 120">
-        <circle class="ring-bg" cx="60" cy="60" r="52" />
-        <circle class="ring-fg" cx="60" cy="60" r="52" />
-      </svg>
-      <div class="ring-text">
-        <span id="progress-num">0</span><span class="pct">%</span>
-      </div>
-    </div>
-
-    <p class="status-text" id="status-text">Preparing your workspace...</p>
-    <!-- Premium Install Card -->
-<div id="installCard" class="install-card" hidden>
-
-  <div class="install-icon">
-    <img src="assets/icons/logo-splash.png" alt="Chef Bisu" width="70" height="70">
-  </div>
-
-  <h3>Install Chef Bisu</h3>
-
-  <p>
-    Install the app for a faster, smoother and native experience.
-  </p>
-
-  <button id="installBtn" class="install-btn">
-    Install Now
-  </button>
-
-  <button id="laterBtn" class="later-btn">
-    Later
-  </button>
-
-</div>
-  </div>
-
+  <main class="splash-container" aria-live="polite">
+    <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+    <div class="top-mark"><span></span>CHEF BISU</div>
+    <section class="loading-panel" aria-label="Application is loading">
+      <div class="logo-orbit" aria-hidden="true"><span class="orbit orbit-one"></span><span class="orbit orbit-two"></span><div class="logo-shell"><img class="brand-logo" src="assets/icons/logo-splash.png" alt="" width="180" height="180"></div></div>
+      <div class="brand-copy"><p class="eyebrow">RESTAURANT MANAGEMENT</p><h1>Chef Bisu</h1><p class="tagline">Everything in your kitchen, beautifully in sync.</p></div>
+      <div class="progress-area"><div class="progress-meta"><span id="status-text">Opening your workspace</span><strong><span id="progress-num">0</span>%</strong></div><div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-label="Loading progress"><span class="progress-fill"></span></div></div>
+    </section>
+    <p class="secure-note"><span class="secure-dot"></span> Securely connecting</p>
+    <div id="installCard" class="install-card" hidden><div class="install-icon"><img src="assets/icons/logo-splash.png" alt="Chef Bisu" width="70" height="70"></div><h3>Install Chef Bisu</h3><p>Install the app for a faster, smoother and native experience.</p><button id="installBtn" class="install-btn">Install Now</button><button id="laterBtn" class="later-btn">Later</button></div>
+  </main>
 <script src="splash.js"></script>
 </body>
 </html>
